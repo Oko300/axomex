@@ -854,3 +854,56 @@ body {
   line-height: 1.7;
 }
 .wl-closed-box a { color: var(--teal); text-decoration: none; font-weight: 700; }
+
+.wl-gtd {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 6px 20px;
+  background: rgba(167,139,250,0.15);
+  border: 1px solid rgba(167,139,250,0.4);
+  border-radius: 50px;
+  color: #a78bfa;
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+}
+
+/* ---- CONNECTED BADGE ---- */
+.connected-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(62,207,178,0.1);
+  border: 1px solid rgba(62,207,178,0.3);
+  border-radius: 12px;
+  padding: 10px 16px;
+  margin-bottom: 0.5rem;
+}
+.connected-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--teal);
+  color: var(--ocean);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.connected-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.connected-name {
+  font-weight: 800;
+  color: var(--white);
+  font-size: 0.95rem;
+}
+.connected-tag {
+  font-size: 0.75rem;
+  color: var(--teal);
+  font-weight: 700;
+}

@@ -261,13 +261,31 @@
           // Mark connect step done
           document.getElementById('step-connect').classList.add('done');
           document.getElementById('check-connect').classList.add('visible');
-          document.getElementById('connect-status').textContent = 'Connected as @' + data.username + ' ✓';
-          document.getElementById('connect-btn-wrap').innerHTML = '<span style="color:var(--teal);font-weight:800;">@' + data.username + ' connected ✅</span>';
+          document.getElementById('connect-status').textContent = '✅ Connected as @' + data.username;
+          document.getElementById('connect-btn-wrap').innerHTML = `
+            <div class="connected-badge">
+              <div class="connected-avatar">@</div>
+              <div class="connected-info">
+                <span class="connected-name">@${data.username}</span>
+                <span class="connected-tag">X Account Connected ✅</span>
+              </div>
+            </div>
+            <a href="/auth/x" class="step-btn x-btn" style="margin-top:0.5rem;font-size:0.75rem;">Switch Account</a>
+          `;
 
           // Check if following
           if (data.isFollowing) {
             document.getElementById('step-follow').classList.add('done');
             document.getElementById('check-follow').classList.add('visible');
+          } else {
+            // Show not following warning
+            const followStep = document.getElementById('step-follow');
+            if (followStep) {
+              const warn = document.createElement('p');
+              warn.style.cssText = 'color:#e74c3c;font-size:0.8rem;margin-top:0.4rem;font-weight:700;';
+              warn.textContent = '⚠️ You are not following @AxomexNFT yet!';
+              followStep.querySelector('.step-body').appendChild(warn);
+            }
           }
         }
       } catch(e) { console.log('Status check failed'); }
