@@ -235,6 +235,27 @@
 
   <script>
     const ADMIN_KEY = 'axomex2026';
+
+    // Check X connection status on page load
+    async function checkXStatus() {
+      try {
+        const res = await fetch('/api/status');
+        const data = await res.json();
+        if (data.connected) {
+          // Mark connect step done
+          document.getElementById('step-connect').classList.add('done');
+          document.getElementById('check-connect').classList.add('visible');
+          document.getElementById('connect-status').textContent = 'Connected as @' + data.username + ' ✓';
+          document.getElementById('connect-btn-wrap').innerHTML = '<span style="color:var(--teal);font-weight:800;">@' + data.username + ' connected ✅</span>';
+
+          // Check if following
+          if (data.isFollowing) {
+            document.getElementById('step-follow').classList.add('done');
+            document.getElementById('check-follow').classList.add('visible');
+          }
+        }
+      } catch(e) { console.log('Status check failed'); }
+    }
     const TOTAL_SPOTS = 50;
 
     // Load state from localStorage
@@ -299,6 +320,7 @@
     }
 
     init();
+    checkXStatus();
   </script>
 
 </body>
