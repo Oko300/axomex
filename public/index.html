@@ -10,7 +10,6 @@
 </head>
 <body>
 
-  <!-- Floating bubbles background -->
   <div class="bubbles-bg" aria-hidden="true">
     <span></span><span></span><span></span><span></span>
     <span></span><span></span><span></span><span></span>
@@ -21,7 +20,7 @@
   <nav class="nav">
     <div class="nav-logo">AXOMEX</div>
     <a href="https://x.com/AxomexNFT" target="_blank" class="nav-cta">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622z"/></svg>
       Follow on X
     </a>
   </nav>
@@ -42,8 +41,8 @@
         <span class="dot">·</span>
         <span>Evolve</span>
       </div>
-      <a href="https://x.com/AxomexNFT" target="_blank" class="hero-btn">
-        Join the Journey
+      <a href="#whitelist" class="hero-btn">
+        Join the Whitelist
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622z"/></svg>
       </a>
     </div>
@@ -114,7 +113,130 @@
     </div>
   </section>
 
-  <!-- AS SEEN ON / NFT CALENDAR BADGE -->
+  <!-- WHITELIST FORM -->
+  <section class="whitelist" id="whitelist">
+    <div class="wl-inner">
+      <div class="section-label">✦ Free Whitelist Giveaway ✦</div>
+      <h2>Secure Your Spot</h2>
+      <p class="wl-sub">Complete all steps below to enter the Axomex whitelist. Winners get a FREE Axomex NFT at mint!</p>
+
+      <div class="wl-steps">
+
+        <!-- STEP 1: Connect X -->
+        <div class="wl-step" id="step-connect">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h3>Connect Your X Account</h3>
+            <p>Click the button to verify your X identity</p>
+            <a href="https://x.com/AxomexNFT" target="_blank" class="step-btn x-btn" onclick="markDone('step-connect')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622z"/></svg>
+              Connect X
+            </a>
+          </div>
+          <div class="step-check" id="check-connect">✓</div>
+        </div>
+
+        <!-- STEP 2: Follow -->
+        <div class="wl-step" id="step-follow">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h3>Follow @AxomexNFT on X</h3>
+            <p>Click to go to our X profile and follow us</p>
+            <a href="https://x.com/intent/follow?screen_name=AxomexNFT" target="_blank" class="step-btn x-btn" onclick="markDone('step-follow')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622z"/></svg>
+              Follow on X
+            </a>
+          </div>
+          <div class="step-check" id="check-follow">✓</div>
+        </div>
+
+        <!-- STEP 3: Like & Repost -->
+        <div class="wl-step" id="step-like">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h3>Like and Repost our Pinned Post</h3>
+            <p>Go to our profile, like and repost our pinned tweet</p>
+            <a href="https://x.com/AxomexNFT" target="_blank" class="step-btn x-btn" onclick="markDone('step-like')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622z"/></svg>
+              Like and Repost
+            </a>
+          </div>
+          <div class="step-check" id="check-like">✓</div>
+        </div>
+
+        <!-- STEP 4: Comment -->
+        <div class="wl-step" id="step-comment">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h3>Comment Your Wallet and Tag 2 Friends</h3>
+            <p>On our pinned post, comment your wallet address and tag 2 friends</p>
+            <a href="https://x.com/AxomexNFT" target="_blank" class="step-btn x-btn" onclick="markDone('step-comment')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622z"/></svg>
+              Go Comment
+            </a>
+          </div>
+          <div class="step-check" id="check-comment">✓</div>
+        </div>
+
+      </div>
+
+      <!-- FORM -->
+      <div class="wl-form-wrap">
+        <h3 class="form-title">Submit Your Entry</h3>
+        <form class="wl-form" action="https://formspree.io/f/mlgvzkdk" method="POST">
+
+          <div class="form-group">
+            <label>Your X Username</label>
+            <div class="input-wrap">
+              <span class="input-icon">@</span>
+              <input type="text" name="x_username" placeholder="yourxusername" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Link to Your Comment on X</label>
+            <div class="input-wrap">
+              <span class="input-icon">🔗</span>
+              <input type="url" name="comment_link" placeholder="https://x.com/..." required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Your Wallet Address</label>
+            <div class="input-wrap">
+              <span class="input-icon">👛</span>
+              <input type="text" name="wallet" placeholder="0x... or your ETH/SOL wallet" required />
+            </div>
+          </div>
+
+          <div class="form-checks">
+            <label class="check-label">
+              <input type="checkbox" name="followed" required />
+              <span>I have followed @AxomexNFT on X</span>
+            </label>
+            <label class="check-label">
+              <input type="checkbox" name="reposted" required />
+              <span>I have liked and reposted the pinned post</span>
+            </label>
+            <label class="check-label">
+              <input type="checkbox" name="commented" required />
+              <span>I have commented my wallet and tagged 2 friends</span>
+            </label>
+          </div>
+
+          <button type="submit" class="submit-btn">
+            Submit My Entry
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+
+          <p class="form-note">Winners will be announced on X. Make sure to follow @AxomexNFT so you don't miss it!</p>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- AS SEEN ON -->
   <section class="seen-on">
     <p class="seen-label">As Seen On</p>
     <a href="https://nftcalendar.io" target="_blank" rel="noopener" class="nftcal-badge">
@@ -131,6 +253,18 @@
       @AxomexNFT
     </a>
   </footer>
+
+  <script>
+    function markDone(stepId) {
+      setTimeout(() => {
+        const step = document.getElementById(stepId);
+        const checkId = 'check-' + stepId.replace('step-', '');
+        const check = document.getElementById(checkId);
+        if (step) step.classList.add('done');
+        if (check) check.classList.add('visible');
+      }, 1000);
+    }
+  </script>
 
 </body>
 </html>
