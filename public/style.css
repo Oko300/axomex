@@ -775,3 +775,95 @@ body {
   .wl-form-wrap { padding: 1.5rem; }
   .wl-step { flex-wrap: wrap; }
 }
+
+/* ---- SPOTS BAR ---- */
+.spots-bar {
+  width: 100%;
+  max-width: 500px;
+  height: 8px;
+  background: rgba(62,207,178,0.15);
+  border-radius: 50px;
+  margin: 0 auto 0.5rem;
+  overflow: hidden;
+}
+.spots-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--teal), var(--accent));
+  border-radius: 50px;
+  width: 0%;
+  transition: width 0.5s ease;
+}
+.spots-label {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+/* ---- TWEET STEP ---- */
+.tweet-step { border-color: rgba(62,207,178,0.35) !important; }
+.tweet-preview {
+  background: rgba(6,42,53,0.8);
+  border: 1px solid rgba(62,207,178,0.2);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 0.8rem;
+  font-size: 0.85rem;
+  color: #a8ddd8;
+  font-style: italic;
+  line-height: 1.6;
+}
+.tweet-btn {
+  background: var(--teal) !important;
+  color: var(--ocean) !important;
+  border: none !important;
+}
+.tweet-btn:hover {
+  background: var(--accent) !important;
+  transform: translateY(-2px);
+}
+
+/* ---- FORM INSTRUCTIONS ---- */
+.form-instructions {
+  font-size: 0.95rem;
+  color: #a8ddd8;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+.form-instructions strong { color: var(--teal); }
+
+/* ---- CLOSED STATE ---- */
+.wl-closed-box {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: rgba(10,61,74,0.5);
+  border: 1px solid rgba(62,207,178,0.15);
+  border-radius: 24px;
+  backdrop-filter: blur(8px);
+}
+.closed-icon { font-size: 4rem; margin-bottom: 1rem; }
+.wl-closed-box h2 {
+  font-family: var(--font-head);
+  font-size: 2rem;
+  color: var(--white);
+  margin-bottom: 1rem;
+}
+.wl-closed-box p {
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+.wl-closed-box a { color: var(--teal); text-decoration: none; font-weight: 700; }
+
+.wl-gtd {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 6px 20px;
+  background: rgba(167,139,250,0.15);
+  border: 1px solid rgba(167,139,250,0.4);
+  border-radius: 50px;
+  color: #a78bfa;
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+}
