@@ -255,14 +255,81 @@
     let userConnected = false;
     let userFollowing = false;
 
-    // Lock submit button until all verified
+    // Read from URL hash after OAuth redirect
+    function readFromHash() {
+      const hash = window.location.hash;
+      if (hash.includes('connected=')) {
+        const params = new URLSearchParams(hash.replace('#', ''));
+        const username = decodeURIComponent(params.get('connected') || '');
+        const isFollowing = params.get('following') === 'true';
+        if (username) {
+          localStorage.setItem('x_user', JSON.stringify({ username, isFollowing }));
+          history.replaceState(null, '', '/#whitelist');
+        }
+      }
+    }
+
+    function disconnectX() {
+      localStorage.removeItem('x_user');
+      location.reload();
+    }
+
+    function applyUserData(data) {
+      userConnected = true;
+      userFollowing = data.isFollowing || false;
+
+      // Mark Step 1 done
+      const stepConnect = document.getElementById('step-connect');
+      const checkConnect = document.getElementById('check-connect');
+      if (stepConnect) stepConnect.classList.add('done');
+      if (checkConnect) checkConnect.classList.add('visible');
+
+      // Show username badge
+      const statusEl = document.getElementById('connect-status');
+      const btnWrap = document.getElementById('connect-btn-wrap');
+      if (statusEl) statusEl.textContent = '✅ Connected as @' + data.username;
+      if (btnWrap) {
+        btnWrap.innerHTML = `
+          <div class="connected-badge">
+            <div class="connected-avatar">@</div>
+            <div class="connected-info">
+              <span class="connected-name">@${data.username}</span>
+              <span class="connected-tag">X Account Connected ✅</span>
+            </div>
+          </div>
+          <button onclick="disconnectX()" class="step-btn x-btn" style="margin-top:0.5rem;font-size:0.75rem;cursor:pointer;border:none;">Switch Account</button>
+        `;
+      }
+
+      // Check follow status
+      if (data.isFollowing) {
+        const stepFollow = document.getElementById('step-follow');
+        const checkFollow = document.getElementById('check-follow');
+        if (stepFollow) stepFollow.classList.add('done');
+        if (checkFollow) checkFollow.classList.add('visible');
+        // Remove warning if exists
+        const warn = document.querySelector('.follow-warning');
+        if (warn) warn.remove();
+      } else {
+        const followStep = document.getElementById('step-follow');
+        if (followStep && !followStep.querySelector('.follow-warning')) {
+          const warn = document.createElement('p');
+          warn.className = 'follow-warning';
+          warn.style.cssText = 'color:#e74c3c;font-size:0.8rem;margin-top:0.5rem;font-weight:700;';
+          warn.textContent = '⚠️ You must follow @AxomexNFT to proceed!';
+          followStep.querySelector('.step-body').appendChild(warn);
+        }
+      }
+
+      updateSubmitLock();
+    }
+
     function updateSubmitLock() {
       const submitBtn = document.getElementById('submit-btn');
       const lockNotice = document.getElementById('lock-notice');
       if (!submitBtn) return;
       if (userConnected && userFollowing) {
         submitBtn.classList.remove('btn-locked');
-        submitBtn.removeAttribute('disabled');
         submitBtn.style.pointerEvents = 'auto';
         if (lockNotice) lockNotice.style.display = 'none';
       } else {
@@ -270,117 +337,39 @@
         submitBtn.style.pointerEvents = 'none';
         if (lockNotice) {
           lockNotice.style.display = 'block';
-          if (!userConnected) {
-            lockNotice.textContent = '🔒 Connect your X account to unlock submission';
-          } else if (!userFollowing) {
-            lockNotice.textContent = '🔒 You must follow @AxomexNFT to unlock submission';
-          }
+          lockNotice.textContent = !userConnected
+            ? '🔒 Connect your X account to unlock submission'
+            : '🔒 You must follow @AxomexNFT to unlock submission';
         }
       }
     }
 
-    // Check X connection status on page load
     async function checkXStatus() {
+      readFromHash();
+
+      // Try localStorage first
+      const stored = localStorage.getItem('x_user');
+      if (stored) {
+        try {
+          const data = JSON.parse(stored);
+          applyUserData(data);
+          return;
+        } catch(e) { localStorage.removeItem('x_user'); }
+      }
+
+      // Try API
       try {
         const res = await fetch('/api/status');
         const data = await res.json();
         if (data.connected) {
-          userConnected = true;
-
-          // Mark connect step done
-          document.getElementById('step-connect').classList.add('done');
-          document.getElementById('check-connect').classList.add('visible');
-          document.getElementById('connect-status').textContent = '✅ Connected as @' + data.username;
-          document.getElementById('connect-btn-wrap').innerHTML = `
-            <div class="connected-badge">
-              <div class="connected-avatar">@</div>
-              <div class="connected-info">
-                <span class="connected-name">@${data.username}</span>
-                <span class="connected-tag">X Account Connected ✅</span>
-              </div>
-            </div>
-            <a href="/auth/x" class="step-btn x-btn" style="margin-top:0.5rem;font-size:0.75rem;">Switch Account</a>
-          `;
-
-          // Check if following — REAL verification
-          if (data.isFollowing) {
-            userFollowing = true;
-            document.getElementById('step-follow').classList.add('done');
-            document.getElementById('check-follow').classList.add('visible');
-            // Remove any existing warning
-            const warn = document.querySelector('.follow-warning');
-            if (warn) warn.remove();
-          } else {
-            userFollowing = false;
-            const followStep = document.getElementById('step-follow');
-            if (followStep && !followStep.querySelector('.follow-warning')) {
-              const warn = document.createElement('p');
-              warn.className = 'follow-warning';
-              warn.style.cssText = 'color:#e74c3c;font-size:0.8rem;margin-top:0.5rem;font-weight:700;';
-              warn.textContent = '⚠️ You must follow @AxomexNFT to proceed!';
-              followStep.querySelector('.step-body').appendChild(warn);
-            }
-          }
+          localStorage.setItem('x_user', JSON.stringify(data));
+          applyUserData(data);
         } else {
-          // Not connected — show lock message on submit
-          userConnected = false;
-          userFollowing = false;
+          updateSubmitLock();
         }
+      } catch(e) {
         updateSubmitLock();
-      } catch(e) { console.log('Status check failed'); }
-    }
-    const TOTAL_SPOTS = 50;
-
-    // Load state from localStorage
-    let spotsLeft = parseInt(localStorage.getItem('axomex_spots') || TOTAL_SPOTS);
-    let isOpen = localStorage.getItem('axomex_open') !== 'false';
-
-    function init() {
-      updateSpotsDisplay();
-      if (!isOpen) {
-        showClosed();
       }
-      // Check for admin key in URL: axomex.xyz/#admin=axomex2026
-      if (window.location.hash.includes('admin=' + ADMIN_KEY)) {
-        document.getElementById('admin-panel').style.display = 'block';
-      }
-    }
-
-    function updateSpotsDisplay() {
-      const taken = TOTAL_SPOTS - spotsLeft;
-      document.getElementById('spots-count').textContent = spotsLeft;
-      document.getElementById('spots-taken').textContent = taken;
-      const pct = (taken / TOTAL_SPOTS) * 100;
-      document.getElementById('spots-bar-fill').style.width = pct + '%';
-      if (spotsLeft <= 0) showClosed();
-    }
-
-    function incrementSpots() {
-      if (spotsLeft > 0) {
-        spotsLeft--;
-        localStorage.setItem('axomex_spots', spotsLeft);
-        updateSpotsDisplay();
-      }
-    }
-
-    function closeWhitelist() {
-      isOpen = false;
-      localStorage.setItem('axomex_open', 'false');
-      showClosed();
-      alert('Whitelist is now CLOSED.');
-    }
-
-    function openWhitelist() {
-      isOpen = true;
-      localStorage.setItem('axomex_open', 'true');
-      document.getElementById('wl-closed').style.display = 'none';
-      document.getElementById('wl-open').style.display = 'block';
-      alert('Whitelist is now OPEN.');
-    }
-
-    function showClosed() {
-      document.getElementById('wl-open').style.display = 'none';
-      document.getElementById('wl-closed').style.display = 'block';
     }
 
     function markDone(stepId) {
@@ -390,6 +379,47 @@
         if (step) step.classList.add('done');
         if (check) check.classList.add('visible');
       }, 1200);
+    }
+
+    function incrementSpots() {
+      let spots = parseInt(localStorage.getItem('axomex_spots') || '50');
+      if (spots > 0) {
+        spots--;
+        localStorage.setItem('axomex_spots', spots);
+      }
+    }
+
+    const TOTAL_SPOTS = 50;
+    let isOpen = localStorage.getItem('axomex_open') !== 'false';
+
+    function init() {
+      if (!isOpen) showClosed();
+      if (window.location.hash.includes('admin=' + ADMIN_KEY)) {
+        document.getElementById('admin-panel').style.display = 'block';
+      }
+      updateSubmitLock();
+    }
+
+    function showClosed() {
+      const open = document.getElementById('wl-open');
+      const closed = document.getElementById('wl-closed');
+      if (open) open.style.display = 'none';
+      if (closed) closed.style.display = 'block';
+    }
+
+    function closeWhitelist() {
+      localStorage.setItem('axomex_open', 'false');
+      showClosed();
+      alert('Whitelist is now CLOSED.');
+    }
+
+    function openWhitelist() {
+      localStorage.setItem('axomex_open', 'true');
+      const open = document.getElementById('wl-open');
+      const closed = document.getElementById('wl-closed');
+      if (open) open.style.display = 'block';
+      if (closed) closed.style.display = 'none';
+      alert('Whitelist is now OPEN.');
     }
 
     init();
