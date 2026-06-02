@@ -25,7 +25,6 @@ module.exports = async (req, res) => {
   if (!codeVerifier) return res.redirect('/?error=no_verifier');
 
   try {
-    // Exchange code for token
     const tokenRes = await axios.post(
       'https://api.twitter.com/2/oauth2/token',
       new URLSearchParams({
@@ -46,13 +45,12 @@ module.exports = async (req, res) => {
 
     const accessToken = tokenRes.data.access_token;
 
-    // Get user info
     const userRes = await axios.get('https://api.twitter.com/2/users/me', {
       headers: { Authorization: `Bearer ${accessToken}` }
     });
     const user = userRes.data.data;
 
-    // Check if following @AxomexNFT
+    // Check if following
     let isFollowing = false;
     try {
       const targetRes = await axios.get(
@@ -60,32 +58,29 @@ module.exports = async (req, res) => {
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       const targetId = targetRes.data.data.id;
-
       const followRes = await axios.get(
         `https://api.twitter.com/2/users/${user.id}/following?max_results=1000`,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
       isFollowing = followRes.data.data?.some(u => u.id === targetId) || false;
     } catch(e) {
-      console.error('Follow check error:', e.response?.data || e.message);
+      console.error('Follow check:', e.response?.data || e.message);
     }
 
-    // Store in cookie — secure settings
-    const userData = JSON.stringify({
+    // Store in cookie with all possible flags for Vercel
+    const userData = encodeURIComponent(JSON.stringify({
       username: user.username,
-      name: user.name,
       isFollowing
-    });
-
-    const cookieValue = encodeURIComponent(userData);
+    }));
 
     res.setHeader('Set-Cookie', [
-      `x_user=${cookieValue}; Path=/; HttpOnly=false; SameSite=Lax; Max-Age=7200`,
+      `x_user=${userData}; Path=/; Max-Age=7200; SameSite=Lax`,
       `oauth_state=; Path=/; Max-Age=0`,
       `code_verifier=; Path=/; Max-Age=0`
     ]);
 
-    res.redirect('/#whitelist');
+    // Pass data in URL hash so JS can also store in localStorage as backup
+    res.redirect(`/#connected=${encodeURIComponent(user.username)}&following=${isFollowing}`);
 
   } catch(err) {
     console.error('Callback error:', err.response?.data || err.message);
