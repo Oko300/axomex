@@ -907,3 +907,226 @@ body {
   color: var(--teal);
   font-weight: 700;
 }
+
+/* =============================================
+   FULL MOBILE RESPONSIVENESS FIX
+   ============================================= */
+
+@media (max-width: 1024px) {
+  .hero { padding: 7rem 2rem 3rem; gap: 2rem; }
+  .traits-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  /* NAV */
+  .nav { padding: 0.8rem 1rem; }
+  .nav-logo { font-size: 1.2rem; }
+  .nav-cta { padding: 6px 14px; font-size: 0.8rem; }
+  .nav-cta span { display: none; }
+
+  /* HERO */
+  .hero {
+    flex-direction: column;
+    text-align: center;
+    padding: 5.5rem 1.2rem 3rem;
+    gap: 1.5rem;
+    min-height: auto;
+  }
+  .hero-title { font-size: clamp(3rem, 15vw, 5rem); }
+  .hero-tagline { font-size: 0.95rem; }
+  .hero-pills { justify-content: center; font-size: 0.95rem; }
+  .hero-btn { font-size: 0.9rem; padding: 12px 24px; }
+  .hero-img-wrap { width: 180px; height: 180px; }
+  .ring1 { width: 170px; height: 170px; }
+  .ring2 { width: 135px; height: 135px; }
+  .hero-axo { font-size: 4rem; }
+  .hero-badge { font-size: 0.7rem; padding: 5px 14px; }
+
+  /* STORY */
+  .story { padding: 3rem 1.2rem; }
+  .story p { font-size: 0.95rem; }
+  .story h2, .traits h2 { font-size: clamp(1.6rem, 6vw, 2.5rem); }
+
+  /* TRAITS */
+  .traits { padding: 2rem 1.2rem 3rem; }
+  .traits-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .trait-card { padding: 1.2rem 1rem; }
+  .trait-icon { font-size: 1.8rem; }
+  .trait-card h3 { font-size: 1rem; }
+  .trait-card p { font-size: 0.8rem; }
+
+  /* STATS */
+  .stats { padding: 2.5rem 1.2rem; gap: 1.5rem; flex-wrap: wrap; }
+  .stat-num { font-size: 2.5rem; }
+  .stat-label { font-size: 0.75rem; }
+  .stat-divider { display: none; }
+
+  /* WHITELIST */
+  .whitelist { padding: 3rem 1rem; }
+  .wl-inner { width: 100%; }
+  .wl-step {
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    padding: 1rem;
+  }
+  .step-num { min-width: 32px; height: 32px; font-size: 0.9rem; }
+  .step-body h3 { font-size: 0.9rem; }
+  .step-body p { font-size: 0.8rem; }
+  .step-btn { font-size: 0.8rem; padding: 7px 14px; }
+  .wl-form-wrap { padding: 1.2rem; }
+  .form-title { font-size: 1.3rem; }
+  .form-instructions { font-size: 0.85rem; }
+  .submit-btn { font-size: 0.9rem; padding: 14px; }
+  .wl-sub { font-size: 0.9rem; }
+
+  /* SEEN ON */
+  .seen-on { padding: 3rem 1rem; }
+  .nftcal-badge img { height: 30px; }
+
+  /* FOOTER */
+  .footer { padding: 2rem 1rem; }
+  .footer-logo { font-size: 1.4rem; }
+  .footer p { font-size: 0.75rem; }
+}
+
+@media (max-width: 480px) {
+  /* Extra small phones */
+  .hero-title { font-size: clamp(2.5rem, 18vw, 4rem); }
+  .traits-grid { grid-template-columns: 1fr; }
+  .hero-badge { letter-spacing: 1px; font-size: 0.65rem; }
+  .wl-form-wrap { padding: 1rem; }
+  .connected-badge { flex-direction: column; text-align: center; }
+  .stats { gap: 1rem; }
+  .stat-num { font-size: 2rem; }
+}
+
+/* =============================================
+   FULL MOBILE RESPONSIVE FIX
+   All screen sizes: 320px to 1440px
+   ============================================= */
+
+@media (max-width: 480px) {
+  /* NAV */
+  .nav { padding: 0.8rem 1rem; }
+  .nav-logo { font-size: 1.1rem; }
+  .nav-cta { padding: 6px 12px; font-size: 0.78rem; }
+  .nav-cta svg { display: none; }
+
+  /* HERO */
+  .hero {
+    padding: 5rem 1rem 2rem;
+    flex-direction: column;
+    text-align: center;
+    gap: 1.5rem;
+  }
+  .hero-title { font-size: 3.5rem; }
+  .hero-tagline { font-size: 0.95rem; letter-spacing: 2px; }
+  .hero-pills { justify-content: center; font-size: 0.9rem; }
+  .hero-btn { padding: 12px 24px; font-size: 0.9rem; }
+  .hero-badge { font-size: 0.7rem; padding: 5px 12px; }
+  .hero-img-wrap { width: 180px; height: 180px; }
+  .ring1 { width: 170px; height: 170px; }
+  .ring2 { width: 130px; height: 130px; }
+  .hero-axo { font-size: 4rem; }
+
+  /* STORY */
+  .story { padding: 3rem 1rem; }
+  .story h2 { font-size: 1.8rem; }
+  .story p { font-size: 0.95rem; }
+
+  /* TRAITS */
+  .traits { padding: 2rem 1rem 3rem; }
+  .traits h2 { font-size: 1.8rem; }
+  .traits-grid { grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+  .trait-card { padding: 1.2rem 1rem; }
+  .trait-card h3 { font-size: 1rem; }
+  .trait-card p { font-size: 0.8rem; }
+  .trait-icon { font-size: 1.8rem; }
+
+  /* STATS */
+  .stats { padding: 2rem 1rem; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+  .stat-num { font-size: 2.5rem; }
+  .stat-label { font-size: 0.75rem; }
+
+  /* WHITELIST */
+  .whitelist { padding: 3rem 1rem; }
+  .wl-inner h2 { font-size: 1.8rem; }
+  .wl-sub { font-size: 0.9rem; }
+  .wl-step { padding: 1rem; gap: 0.8rem; flex-wrap: nowrap; }
+  .step-num { min-width: 32px; height: 32px; font-size: 0.9rem; }
+  .step-body h3 { font-size: 0.9rem; }
+  .step-body p { font-size: 0.78rem; }
+  .step-btn { padding: 7px 14px; font-size: 0.78rem; }
+  .wl-form-wrap { padding: 1.2rem; }
+  .form-title { font-size: 1.3rem; }
+  .form-instructions { font-size: 0.85rem; }
+  .submit-btn { padding: 14px; font-size: 0.9rem; }
+  .tweet-preview p { font-size: 0.8rem; }
+
+  /* FOOTER */
+  .footer { padding: 1.5rem 1rem; }
+  .footer-logo { font-size: 1.4rem; }
+  .footer p { font-size: 0.75rem; }
+
+  /* CONNECTED BADGE */
+  .connected-badge { padding: 8px 12px; gap: 8px; }
+  .connected-avatar { width: 32px; height: 32px; font-size: 0.85rem; }
+  .connected-name { font-size: 0.85rem; }
+  .connected-tag { font-size: 0.7rem; }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .hero {
+    padding: 6rem 2rem 3rem;
+    flex-direction: column;
+    text-align: center;
+  }
+  .hero-title { font-size: 5rem; }
+  .hero-pills { justify-content: center; }
+  .traits-grid { grid-template-columns: 1fr 1fr; }
+  .wl-form-wrap { padding: 1.8rem; }
+  .story { padding: 4rem 1.5rem; }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .hero { padding: 7rem 3rem 4rem; gap: 2rem; }
+  .hero-title { font-size: 5.5rem; }
+  .traits-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Fix overflow on all screens */
+* { box-sizing: border-box; }
+body { overflow-x: hidden; }
+img, svg { max-width: 100%; }
+.wl-inner { width: 100%; }
+.wl-steps { width: 100%; }
+.wl-form-wrap { width: 100%; }
+input { max-width: 100%; }
+
+/* ---- GTD PHASE STYLES ---- */
+.wl-gtd {
+  background: rgba(39, 174, 96, 0.15) !important;
+  border-color: rgba(39, 174, 96, 0.5) !important;
+  color: #2ecc71 !important;
+}
+
+/* Locked submit button */
+.submit-btn.btn-locked {
+  background: rgba(62,207,178,0.2) !important;
+  color: rgba(255,255,255,0.4) !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  pointer-events: none;
+}
+
+.lock-notice {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #e74c3c;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  padding: 10px 16px;
+  background: rgba(231,76,60,0.1);
+  border: 1px solid rgba(231,76,60,0.3);
+  border-radius: 10px;
+}

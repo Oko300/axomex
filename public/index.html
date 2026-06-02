@@ -43,7 +43,7 @@
         <span>Evolve</span>
       </div>
       <a href="#whitelist" class="hero-btn">
-        Join the Whitelist — Free Mint
+        Join GTD — Free Mint
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622z"/></svg>
       </a>
     </div>
@@ -127,10 +127,10 @@
 
       <!-- OPEN STATE -->
       <div id="wl-open">
-        <div class="section-label">✦ Free Whitelist — Free Mint ✦</div>
-        <h2>Secure Your Spot</h2>
-        <p class="wl-sub">First Come First Serve. Complete all steps below to enter.</p>
-        <p class="wl-gtd">🔜 GTD Soon</p>
+        <div class="section-label">✦ GTD — Guaranteed Token Distribution ✦</div>
+        <h2>Secure Your GTD Spot</h2>
+        <p class="wl-sub">Complete all steps below. Your X account will be verified before submission is allowed.</p>
+        <p class="wl-gtd">🟢 GTD Live</p>
 
 
 
@@ -215,8 +215,9 @@
         <!-- SUBMIT BUTTON TO GOOGLE FORM -->
         <div class="wl-form-wrap">
           <h3 class="form-title">Submit Your Entry</h3>
-          <p class="form-instructions">After completing all 5 steps above, click the button below to fill the submission form. You will need your <strong>tweet link</strong>, <strong>comment link</strong>, <strong>X username</strong> and <strong>EVM wallet address</strong> ready.</p>
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLSevXL780tlKIBWxCl4eDsTH7zgJm5SHPrKCV3csEdnqvxVHAw/viewform" target="_blank" class="submit-btn" onclick="incrementSpots()">
+          <p class="form-instructions">Your X account must be connected and all tasks verified before you can submit. You will need your <strong>tweet link</strong>, <strong>comment link</strong> and <strong>EVM wallet address</strong> ready.</p>
+          <p id="lock-notice" class="lock-notice">🔒 Connect your X account and follow @AxomexNFT to unlock submission</p>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLScm87RSpOKJyZxc48S5asIUW1PN9uO5eK2q3CgiwYNSbx4vgw/viewform" target="_blank" class="submit-btn btn-locked" id="submit-btn" onclick="incrementSpots()">
             Fill Submission Form
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
@@ -251,6 +252,32 @@
 
   <script>
     const ADMIN_KEY = 'axomex2026';
+    let userConnected = false;
+    let userFollowing = false;
+
+    // Lock submit button until all verified
+    function updateSubmitLock() {
+      const submitBtn = document.getElementById('submit-btn');
+      const lockNotice = document.getElementById('lock-notice');
+      if (!submitBtn) return;
+      if (userConnected && userFollowing) {
+        submitBtn.classList.remove('btn-locked');
+        submitBtn.removeAttribute('disabled');
+        submitBtn.style.pointerEvents = 'auto';
+        if (lockNotice) lockNotice.style.display = 'none';
+      } else {
+        submitBtn.classList.add('btn-locked');
+        submitBtn.style.pointerEvents = 'none';
+        if (lockNotice) {
+          lockNotice.style.display = 'block';
+          if (!userConnected) {
+            lockNotice.textContent = '🔒 Connect your X account to unlock submission';
+          } else if (!userFollowing) {
+            lockNotice.textContent = '🔒 You must follow @AxomexNFT to unlock submission';
+          }
+        }
+      }
+    }
 
     // Check X connection status on page load
     async function checkXStatus() {
@@ -258,6 +285,8 @@
         const res = await fetch('/api/status');
         const data = await res.json();
         if (data.connected) {
+          userConnected = true;
+
           // Mark connect step done
           document.getElementById('step-connect').classList.add('done');
           document.getElementById('check-connect').classList.add('visible');
@@ -273,21 +302,31 @@
             <a href="/auth/x" class="step-btn x-btn" style="margin-top:0.5rem;font-size:0.75rem;">Switch Account</a>
           `;
 
-          // Check if following
+          // Check if following — REAL verification
           if (data.isFollowing) {
+            userFollowing = true;
             document.getElementById('step-follow').classList.add('done');
             document.getElementById('check-follow').classList.add('visible');
+            // Remove any existing warning
+            const warn = document.querySelector('.follow-warning');
+            if (warn) warn.remove();
           } else {
-            // Show not following warning
+            userFollowing = false;
             const followStep = document.getElementById('step-follow');
-            if (followStep) {
+            if (followStep && !followStep.querySelector('.follow-warning')) {
               const warn = document.createElement('p');
-              warn.style.cssText = 'color:#e74c3c;font-size:0.8rem;margin-top:0.4rem;font-weight:700;';
-              warn.textContent = '⚠️ You are not following @AxomexNFT yet!';
+              warn.className = 'follow-warning';
+              warn.style.cssText = 'color:#e74c3c;font-size:0.8rem;margin-top:0.5rem;font-weight:700;';
+              warn.textContent = '⚠️ You must follow @AxomexNFT to proceed!';
               followStep.querySelector('.step-body').appendChild(warn);
             }
           }
+        } else {
+          // Not connected — show lock message on submit
+          userConnected = false;
+          userFollowing = false;
         }
+        updateSubmitLock();
       } catch(e) { console.log('Status check failed'); }
     }
     const TOTAL_SPOTS = 50;
