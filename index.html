@@ -156,7 +156,7 @@
             <div class="step-body">
               <h3>Follow @AxomexNFT on X</h3>
               <p>Click to go to our profile and follow us</p>
-              <a href="https://x.com/intent/follow?screen_name=AxomexNFT" target="_blank" class="step-btn x-btn">
+              <a href="https://x.com/intent/follow?screen_name=AxomexNFT" target="_blank" class="step-btn x-btn" id="follow-link-btn" onclick="onFollowLinkClick()">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622z"/></svg>
                 Follow on X
               </a>
@@ -174,7 +174,7 @@
             <div class="step-body">
               <h3>Like and Repost our Pinned Post</h3>
               <p>Go to our profile and like + repost the pinned tweet</p>
-              <a href="https://x.com/AxomexNFT" target="_blank" class="step-btn x-btn">
+              <a href="https://x.com/AxomexNFT" target="_blank" class="step-btn x-btn" onclick="markLikeDone()">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622z"/></svg>
                 Like and Repost
               </a>
@@ -188,7 +188,7 @@
             <div class="step-body">
               <h3>Comment Your Wallet and Tag 2 Friends</h3>
               <p>On our pinned post, drop your wallet address and tag 2 friends</p>
-              <a href="https://x.com/AxomexNFT" target="_blank" class="step-btn x-btn">
+              <a href="https://x.com/AxomexNFT" target="_blank" class="step-btn x-btn" onclick="markCommentDone()">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622z"/></svg>
                 Go Comment
               </a>
@@ -203,11 +203,11 @@
               <h3>Post This Tweet Required!</h3>
               <p>You MUST post this tweet before submitting. Copy the link to your tweet afterward.</p>
               <div class="tweet-preview">
-                <p>"I just applied for @AxomexNFT whitelist! 1,111 unique axolotls are coming. Free Mint! Join now: axomex.xyz"</p>
+                <p>"I apply to GTD @AxomexNFT! 1,111 unique axolotls are coming. Free Mint! Join now: axomex.xyz"</p>
               </div>
               <a id="tweet-btn"
-                href="https://x.com/intent/tweet?text=I%20just%20applied%20for%20%40AxomexNFT%20whitelist!%201%2C111%20unique%20axolotls%20are%20coming.%20Free%20Mint!%20Join%20now%3A%20axomex.xyz"
-                target="_blank" class="step-btn tweet-btn">
+                href="https://x.com/intent/tweet?text=I%20apply%20to%20GTD%20%40AxomexNFT!%201%2C111%20unique%20axolotls%20are%20coming.%20Free%20Mint!%20Join%20now%3A%20axomex.xyz"
+                target="_blank" class="step-btn tweet-btn" onclick="onTweetLinkClick()">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622z"/></svg>
                 Post Tweet Now
               </a>
@@ -281,6 +281,30 @@
       const c = $id(checkId); if (c) c.classList.add('visible');
     }
 
+    // ── Step 3: Like — mark done on click ────────────────────
+    function markLikeDone() {
+      setTimeout(function() {
+        markStepDone('step-like', 'check-like');
+      }, 800);
+    }
+
+    // ── Step 4: Comment — mark done on click ─────────────────
+    function markCommentDone() {
+      setTimeout(function() {
+        markStepDone('step-comment', 'check-comment');
+      }, 800);
+    }
+
+    // ── Step 2: Follow link clicked — show verify button ─────
+    function onFollowLinkClick() {
+      // nothing extra needed; verify button already present
+    }
+
+    // ── Step 5: Tweet link clicked — track that user opened it
+    function onTweetLinkClick() {
+      sessionStorage.setItem('tweet_link_opened', '1');
+    }
+
     // ── Submit lock ──────────────────────────────────────────
     function updateSubmitLock() {
       const btn  = $id('submit-btn');
@@ -292,6 +316,14 @@
         btn.style.pointerEvents = 'auto';
         btn.style.opacity = '1';
         if (lock) lock.style.display = 'none';
+        // Scroll form into view so user notices it opened
+        const formWrap = document.querySelector('.wl-form-wrap');
+        if (formWrap) {
+          formWrap.style.transition = 'box-shadow 0.4s ease';
+          formWrap.style.boxShadow = '0 0 0 2px var(--teal)';
+          setTimeout(function() { formWrap.style.boxShadow = ''; }, 2000);
+          formWrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       } else {
         btn.classList.add('btn-locked');
         btn.style.pointerEvents = 'none';
@@ -355,14 +387,18 @@
               setMsg('follow-status', '✓ Verified — you are following @AxomexNFT');
               followBtn.style.display = 'none';
             } else {
-              setMsg('follow-status', '⚠ Not detected yet. Follow @AxomexNFT first, then try again.', '#e74c3c');
-              followBtn.textContent = '✅ I have followed — Verify';
-              followBtn.disabled = false;
+              // Mark follow step done locally so UI advances even without API
+              userFollowing = true;
+              markStepDone('step-follow', 'check-follow');
+              setMsg('follow-status', '✓ Marked as done');
+              followBtn.style.display = 'none';
             }
           } catch (e) {
-            setMsg('follow-status', '⚠ Error checking. Please try again.', '#e74c3c');
-            followBtn.textContent = '✅ I have followed — Verify';
-            followBtn.disabled = false;
+            // Mark follow step done locally on error so user is not blocked
+            userFollowing = true;
+            markStepDone('step-follow', 'check-follow');
+            setMsg('follow-status', '✓ Marked as done');
+            followBtn.style.display = 'none';
           }
           updateSubmitLock();
         });
@@ -383,12 +419,18 @@
               setMsg('tweet-status', '✓ Tweet verified! Submission unlocked.');
               tweetCheck.disabled = true;
             } else {
-              setMsg('tweet-status', '⚠ Tweet not found yet. Post it first, then tick again.', '#e74c3c');
-              tweetCheck.checked = false;
+              // Mark tweet done locally so form unlocks
+              tweetPosted = true;
+              markStepDone('step-tweet', 'check-tweet');
+              setMsg('tweet-status', '✓ Tweet marked as done. Submission unlocked.');
+              tweetCheck.disabled = true;
             }
           } catch (e) {
-            setMsg('tweet-status', '⚠ Error verifying. Please try again.', '#e74c3c');
-            tweetCheck.checked = false;
+            // Mark tweet done locally on error so form unlocks
+            tweetPosted = true;
+            markStepDone('step-tweet', 'check-tweet');
+            setMsg('tweet-status', '✓ Tweet marked as done. Submission unlocked.');
+            tweetCheck.disabled = true;
           }
           updateSubmitLock();
         });
