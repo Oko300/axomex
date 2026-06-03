@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -30,16 +30,16 @@
   <section class="hero">
     <div class="hero-glow"></div>
     <div class="hero-content">
-      <div class="hero-badge">✦ 1,111 Unique Collectibles ✦</div>
+      <div class="hero-badge">âœ¦ 1,111 Unique Collectibles âœ¦</div>
       <h1 class="hero-title">
         <span class="title-ax">AXO</span><span class="title-mex">MEX</span>
       </h1>
       <p class="hero-tagline">A New Life Begins</p>
       <div class="hero-pills">
         <span>Collect</span>
-        <span class="dot">·</span>
+        <span class="dot">Â·</span>
         <span>Hatch</span>
-        <span class="dot">·</span>
+        <span class="dot">Â·</span>
         <span>Evolve</span>
       </div>
       <a href="#whitelist" class="hero-btn">
@@ -50,14 +50,14 @@
     <div class="hero-img-wrap">
       <div class="hero-ring ring1"></div>
       <div class="hero-ring ring2"></div>
-      <div class="hero-axo">🫧</div>
+      <div class="hero-axo">ðŸ«§</div>
     </div>
   </section>
 
   <!-- STORY -->
   <section class="story">
     <div class="story-inner">
-      <div class="section-label">✦ The Lore</div>
+      <div class="section-label">âœ¦ The Lore</div>
       <h2>The Lumina Waters</h2>
       <p>
         In the hidden depths of the <strong>Lumina Waters</strong>, 1,111 unique Axomex axolotls live peacefully among glowing reefs and ancient underwater cities. Each Axomex carries a rare elemental gift passed down from forgotten ocean guardians.
@@ -70,26 +70,26 @@
 
   <!-- TRAITS -->
   <section class="traits">
-    <div class="section-label">✦ Elemental Types</div>
+    <div class="section-label">âœ¦ Elemental Types</div>
     <h2>Choose Your Element</h2>
     <div class="traits-grid">
       <div class="trait-card">
-        <div class="trait-icon">⚡</div>
+        <div class="trait-icon">âš¡</div>
         <h3>Neon Warrior</h3>
         <p>Charged with electric energy from the deep rift zones</p>
       </div>
       <div class="trait-card">
-        <div class="trait-icon">💎</div>
+        <div class="trait-icon">ðŸ’Ž</div>
         <h3>Crystal Healer</h3>
         <p>Gifted with ancient restorative powers of the reef crystals</p>
       </div>
       <div class="trait-card">
-        <div class="trait-icon">🌊</div>
+        <div class="trait-icon">ðŸŒŠ</div>
         <h3>Tide Keeper</h3>
         <p>Blessed by the moon-tides, guardian of the lunar currents</p>
       </div>
       <div class="trait-card">
-        <div class="trait-icon">🌑</div>
+        <div class="trait-icon">ðŸŒ‘</div>
         <h3>Shadow Swimmer</h3>
         <p>Born in the void abyss where no light has ever reached</p>
       </div>
@@ -109,7 +109,7 @@
     </div>
     <div class="stat-divider"></div>
     <div class="stat">
-      <div class="stat-num">∞</div>
+      <div class="stat-num">âˆž</div>
       <div class="stat-label">Possibilities</div>
     </div>
   </section>
@@ -120,16 +120,18 @@
 
       <!-- CLOSED STATE -->
       <div id="wl-closed" style="display:none;" class="wl-closed-box">
-        <div class="closed-icon">🔒</div>
+        <div class="closed-icon">ðŸ”’</div>
         <h2>Whitelist Closed</h2>
         <p>The Axomex whitelist is currently closed. Follow <a href="https://x.com/AxomexNFT" target="_blank">@AxomexNFT</a> on X to be notified when the next round opens.</p>
       </div>
 
       <!-- OPEN STATE -->
       <div id="wl-open">
-        <h2>Secure Your GTD Spot</h2>
+                <h2>Secure Your GTD Spot</h2>
         <p class="wl-sub">Complete all steps below. Your X account will be verified before submission is allowed.</p>
-        <p class="wl-gtd">🟢 GTD Live</p>
+        <p class="wl-gtd">ðŸŸ¢ GTD Live</p>
+
+
 
         <!-- STEPS -->
         <div class="wl-steps">
@@ -147,10 +149,9 @@
                 </a>
               </div>
             </div>
-            <div class="step-check" id="check-connect">✓</div>
+            <div class="step-check" id="check-connect">âœ“</div>
           </div>
 
-          <!-- STEP 2: Follow -->
           <div class="wl-step" id="step-follow">
             <div class="step-num">2</div>
             <div class="step-body">
@@ -160,15 +161,13 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622z"/></svg>
                 Follow on X
               </a>
-              <button id="confirm-follow-btn" class="step-btn" style="background:rgba(62,207,178,0.15);border:1px solid rgba(62,207,178,0.4);color:var(--teal);margin-top:0.5rem;cursor:pointer;">
-                ✅ I have followed — Verify
+              <button onclick="confirmFollow()" class="step-btn" style="background:rgba(62,207,178,0.15);border:1px solid rgba(62,207,178,0.4);color:var(--teal);margin-top:0.5rem;cursor:pointer;">
+                âœ… I have followed Verify
               </button>
-              <p id="follow-status" style="display:none;margin-top:0.5rem;font-size:0.82rem;font-weight:700;"></p>
             </div>
-            <div class="step-check" id="check-follow">✓</div>
+            <div class="step-check" id="check-follow">âœ“</div>
           </div>
 
-          <!-- STEP 3: Like & Repost -->
           <div class="wl-step" id="step-like">
             <div class="step-num">3</div>
             <div class="step-body">
@@ -179,10 +178,9 @@
                 Like and Repost
               </a>
             </div>
-            <div class="step-check" id="check-like">✓</div>
+            <div class="step-check" id="check-like">âœ“</div>
           </div>
 
-          <!-- STEP 4: Comment -->
           <div class="wl-step" id="step-comment">
             <div class="step-num">4</div>
             <div class="step-body">
@@ -193,10 +191,9 @@
                 Go Comment
               </a>
             </div>
-            <div class="step-check" id="check-comment">✓</div>
+            <div class="step-check" id="check-comment">âœ“</div>
           </div>
 
-          <!-- STEP 5: Post Tweet -->
           <div class="wl-step tweet-step" id="step-tweet">
             <div class="step-num">5</div>
             <div class="step-body">
@@ -207,27 +204,28 @@
               </div>
               <a id="tweet-btn"
                 href="https://x.com/intent/tweet?text=I%20just%20applied%20for%20%40AxomexNFT%20whitelist!%201%2C111%20unique%20axolotls%20are%20coming.%20Free%20Mint!%20Join%20now%3A%20axomex.xyz"
-                target="_blank" class="step-btn tweet-btn">
+                target="_blank" class="step-btn tweet-btn" >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622z"/></svg>
                 Post Tweet Now
               </a>
               <label class="manual-confirm" style="margin-top:0.5rem;">
-                <input type="checkbox" id="tweet-done-check" />
-                <span>I have posted the tweet and copied the link ✓</span>
+                <input type="checkbox" onchange="manualMark(this, 'tweet')" />
+                <span>I have posted the tweet and copied the link âœ“</span>
               </label>
-              <p id="tweet-status" style="display:none;margin-top:0.5rem;font-size:0.82rem;font-weight:700;"></p>
+              <span style="display:none">
+              </a>
             </div>
-            <div class="step-check" id="check-tweet">✓</div>
+            <div class="step-check" id="check-tweet">âœ“</div>
           </div>
 
         </div>
 
-        <!-- SUBMIT -->
+        <!-- SUBMIT BUTTON TO GOOGLE FORM -->
         <div class="wl-form-wrap">
           <h3 class="form-title">Submit Your Entry</h3>
           <p class="form-instructions">Your X account must be connected and all tasks verified before you can submit. You will need your <strong>tweet link</strong>, <strong>comment link</strong> and <strong>EVM wallet address</strong> ready.</p>
-          <p id="lock-notice" class="lock-notice">🔒 Connect your X account and follow @AxomexNFT to unlock submission</p>
-          <a href="/api/form" target="_blank" class="submit-btn btn-locked" id="submit-btn">
+          <p id="lock-notice" class="lock-notice">ðŸ”’ Connect your X account and follow @AxomexNFT to unlock submission</p>
+          <a href="/api/form" target="_blank" class="submit-btn btn-locked" id="submit-btn" onclick="incrementSpots()">
             Fill Submission Form
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
@@ -237,13 +235,13 @@
       </div>
       <!-- END OPEN STATE -->
 
-      <!-- HIDDEN ADMIN BUTTONS -->
+      <!-- HIDDEN ADMIN CLOSE BUTTON -->
       <div id="admin-panel" style="display:none; margin-top:2rem; text-align:center;">
         <button onclick="closeWhitelist()" style="background:#e74c3c;color:white;border:none;padding:12px 30px;border-radius:8px;font-weight:800;cursor:pointer;font-size:1rem;">
-          🔒 Close Whitelist Now
+          ðŸ”’ Close Whitelist Now
         </button>
         <button onclick="openWhitelist()" style="background:#27ae60;color:white;border:none;padding:12px 30px;border-radius:8px;font-weight:800;cursor:pointer;font-size:1rem;margin-left:10px;">
-          🔓 Open Whitelist
+          ðŸ”“ Open Whitelist
         </button>
       </div>
 
@@ -253,7 +251,7 @@
   <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-logo">AXOMEX</div>
-    <p>© 2026 Axomex NFT. All rights reserved.</p>
+    <p>Â© 2026 Axomex NFT. All rights reserved.</p>
     <a href="https://x.com/AxomexNFT" target="_blank" class="footer-x">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622z"/></svg>
       @AxomexNFT
@@ -264,56 +262,32 @@
     const ADMIN_KEY = 'axomex2026';
     let userConnected = false;
     let userFollowing = false;
-    let tweetPosted   = false;
+    let tweetPosted = false;
 
-    // ── Helpers ──────────────────────────────────────────────
-    function $id(id) { return document.getElementById(id); }
-
-    function setMsg(id, msg, color) {
-      const el = $id(id); if (!el) return;
-      el.textContent = msg;
-      el.style.color = color || 'var(--teal)';
-      el.style.display = msg ? 'block' : 'none';
-    }
-
-    function markStepDone(stepId, checkId) {
-      const s = $id(stepId); if (s) s.classList.add('done');
-      const c = $id(checkId); if (c) c.classList.add('visible');
-    }
-
-    // ── Submit lock ──────────────────────────────────────────
-    function updateSubmitLock() {
-      const btn  = $id('submit-btn');
-      const lock = $id('lock-notice');
-      if (!btn) return;
-      const allDone = userConnected && userFollowing && tweetPosted;
-      if (allDone) {
-        btn.classList.remove('btn-locked');
-        btn.style.pointerEvents = 'auto';
-        btn.style.opacity = '1';
-        if (lock) lock.style.display = 'none';
-      } else {
-        btn.classList.add('btn-locked');
-        btn.style.pointerEvents = 'none';
-        btn.style.opacity = '0.5';
-        if (lock) {
-          lock.style.display = 'block';
-          if (!userConnected)       lock.textContent = '🔒 Connect your X account to unlock submission';
-          else if (!userFollowing)  lock.textContent = '🔒 Follow @AxomexNFT to unlock submission';
-          else                      lock.textContent = '🔒 Post the required tweet to unlock submission';
+    // ---- Read from URL hash after OAuth ----
+    function readFromHash() {
+      const hash = window.location.hash;
+      if (hash.includes('connected=')) {
+        const params = new URLSearchParams(hash.replace('#', ''));
+        const username = decodeURIComponent(params.get('connected') || '');
+        const isFollowing = params.get('following') === 'true';
+        if (username) {
+          localStorage.setItem('x_user', JSON.stringify({ username, isFollowing }));
+          history.replaceState(null, '', '/#whitelist');
         }
       }
     }
 
-    // ── Apply connected user to UI ───────────────────────────
+    // ---- Apply user data to UI ----
     function applyUserData(data) {
       userConnected = true;
       userFollowing = data.isFollowing || false;
 
-      markStepDone('step-connect', 'check-connect');
+      document.getElementById('step-connect')?.classList.add('done');
+      document.getElementById('check-connect')?.classList.add('visible');
 
-      const statusEl = $id('connect-status');
-      const btnWrap  = $id('connect-btn-wrap');
+      const statusEl = document.getElementById('connect-status');
+      const btnWrap = document.getElementById('connect-btn-wrap');
       if (statusEl) statusEl.textContent = 'Connected as @' + data.username;
       if (btnWrap) {
         btnWrap.innerHTML = `
@@ -329,111 +303,108 @@
       }
 
       if (userFollowing) {
-        markStepDone('step-follow', 'check-follow');
-        setMsg('follow-status', '✓ Already following @AxomexNFT');
-        const fb = $id('confirm-follow-btn');
-        if (fb) fb.style.display = 'none';
+        document.getElementById('step-follow')?.classList.add('done');
+        document.getElementById('check-follow')?.classList.add('visible');
+        document.querySelector('.follow-warning')?.remove();
+        document.getElementById('follow-countdown')?.remove();
+      } else {
+        const followStep = document.getElementById('step-follow');
+        if (followStep && !followStep.querySelector('.follow-warning')) {
+          const warn = document.createElement('p');
+          warn.className = 'follow-warning';
+          warn.style.cssText = 'color:#e74c3c;font-size:0.8rem;margin-top:0.5rem;font-weight:700;';
+          warn.textContent = 'Follow @AxomexNFT then wait for auto-verification';
+          followStep.querySelector('.step-body').appendChild(warn);
+        }
       }
 
       updateSubmitLock();
     }
 
-    // ── Step 2: Follow verify button ─────────────────────────
-    document.addEventListener('DOMContentLoaded', function () {
+    // ---- Auto verify follow after clicking Follow button ----
+    function startFollowVerify() {
+      const countdown = document.getElementById('follow-countdown');
+      if (!countdown) return;
+      countdown.style.display = 'block';
+      let secs = 5;
+      countdown.textContent = 'Verifying follow in ' + secs + 's...';
+      const interval = setInterval(() => {
+        secs--;
+        if (secs > 0) {
+          countdown.textContent = 'Verifying follow in ' + secs + 's...';
+        } else {
+          clearInterval(interval);
+          countdown.textContent = 'Checking your follow status...';
+          // Re-run OAuth silently to verify
+          window.location.href = '/auth/x';
+        }
+      }, 1000);
+    }
 
-      const followBtn = $id('confirm-follow-btn');
-      if (followBtn) {
-        followBtn.addEventListener('click', async function () {
-          followBtn.textContent = 'Checking…';
-          followBtn.disabled = true;
-          try {
-            const res  = await fetch('/api/status', { credentials: 'include' });
-            const data = res.ok ? await res.json() : null;
-            if (data && data.isFollowing) {
-              userFollowing = true;
-              markStepDone('step-follow', 'check-follow');
-              setMsg('follow-status', '✓ Verified — you are following @AxomexNFT');
-              followBtn.style.display = 'none';
-            } else {
-              setMsg('follow-status', '⚠ Not detected yet. Follow @AxomexNFT first, then try again.', '#e74c3c');
-              followBtn.textContent = '✅ I have followed — Verify';
-              followBtn.disabled = false;
-            }
-          } catch (e) {
-            setMsg('follow-status', '⚠ Error checking. Please try again.', '#e74c3c');
-            followBtn.textContent = '✅ I have followed — Verify';
-            followBtn.disabled = false;
-          }
-          updateSubmitLock();
-        });
+    // ---- Tweet posted tracking ----
+    function manualMark(checkbox, stepId) {
+      if (checkbox.checked) {
+        if (stepId === 'tweet') tweetPosted = true;
+        markDone(stepId);
+      } else {
+        if (stepId === 'tweet') tweetPosted = false;
+        document.getElementById('step-' + stepId)?.classList.remove('done');
+        document.getElementById('check-' + stepId)?.classList.remove('visible');
       }
+      updateSubmitLock();
+    }
 
-      // ── Step 5: Tweet checkbox ──────────────────────────────
-      const tweetCheck = $id('tweet-done-check');
-      if (tweetCheck) {
-        tweetCheck.addEventListener('change', async function () {
-          if (!tweetCheck.checked) return;
-          setMsg('tweet-status', '⏳ Verifying your tweet…', 'var(--muted)');
-          try {
-            const res  = await fetch('/api/verify-tweet', { credentials: 'include' });
-            const data = res.ok ? await res.json() : null;
-            if (data && data.verified) {
-              tweetPosted = true;
-              markStepDone('step-tweet', 'check-tweet');
-              setMsg('tweet-status', '✓ Tweet verified! Submission unlocked.');
-              tweetCheck.disabled = true;
-            } else {
-              setMsg('tweet-status', '⚠ Tweet not found yet. Post it first, then tick again.', '#e74c3c');
-              tweetCheck.checked = false;
-            }
-          } catch (e) {
-            setMsg('tweet-status', '⚠ Error verifying. Please try again.', '#e74c3c');
-            tweetCheck.checked = false;
-          }
-          updateSubmitLock();
-        });
-      }
+    function markDone(stepId) {
+      setTimeout(() => {
+        document.getElementById('step-' + stepId)?.classList.add('done');
+        document.getElementById('check-' + stepId)?.classList.add('visible');
+      }, 800);
+    }
 
-      // Block locked submit
-      const sb = $id('submit-btn');
-      if (sb) {
-        sb.addEventListener('click', function (e) {
-          if (sb.classList.contains('btn-locked')) e.preventDefault();
-        });
-      }
+    // ---- Lock/unlock submit ----
+    function updateSubmitLock() {
+      const submitBtn = document.getElementById('submit-btn');
+      const lockNotice = document.getElementById('lock-notice');
+      if (!submitBtn) return;
 
-    });
+      const allDone = userConnected && userFollowing && tweetPosted;
 
-    // ── Read hash after OAuth redirect ───────────────────────
-    function readFromHash() {
-      const hash = window.location.hash;
-      if (hash.includes('connected=')) {
-        const params = new URLSearchParams(hash.replace('#', ''));
-        const username    = decodeURIComponent(params.get('connected') || '');
-        const isFollowing = params.get('following') === 'true';
-        if (username) {
-          localStorage.setItem('x_user', JSON.stringify({ username, isFollowing }));
-          history.replaceState(null, '', '/#whitelist');
+      if (allDone) {
+        submitBtn.classList.remove('btn-locked');
+        submitBtn.style.pointerEvents = 'auto';
+        submitBtn.style.opacity = '1';
+        if (lockNotice) lockNotice.style.display = 'none';
+      } else {
+        submitBtn.classList.add('btn-locked');
+        submitBtn.style.pointerEvents = 'none';
+        submitBtn.style.opacity = '0.5';
+        if (lockNotice) {
+          lockNotice.style.display = 'block';
+          if (!userConnected) lockNotice.textContent = 'Connect your X account to unlock submission';
+          else if (!userFollowing) lockNotice.textContent = 'Follow @AxomexNFT to unlock submission';
+          else if (!tweetPosted) lockNotice.textContent = 'Post the required tweet to unlock submission';
         }
       }
     }
 
-    // ── Disconnect ───────────────────────────────────────────
+    // ---- Disconnect X ----
     function disconnectX() {
       localStorage.removeItem('x_user');
       location.reload();
     }
 
-    // ── Check status on load ─────────────────────────────────
+    // ---- Check status on load ----
     async function checkXStatus() {
       readFromHash();
       const stored = localStorage.getItem('x_user');
       if (stored) {
-        try { applyUserData(JSON.parse(stored)); return; }
-        catch(e) { localStorage.removeItem('x_user'); }
+        try {
+          applyUserData(JSON.parse(stored));
+          return;
+        } catch(e) { localStorage.removeItem('x_user'); }
       }
       try {
-        const res  = await fetch('/api/status', { credentials: 'include' });
+        const res = await fetch('/api/status');
         const data = await res.json();
         if (data.connected) {
           localStorage.setItem('x_user', JSON.stringify(data));
@@ -442,19 +413,21 @@
       } catch(e) { updateSubmitLock(); }
     }
 
-    // ── Admin ─────────────────────────────────────────────────
-    function initAdmin() {
+    function incrementSpots() {}
+
+    // ---- Admin controls ----
+    function init() {
       const isOpen = localStorage.getItem('axomex_open') !== 'false';
       if (!isOpen) showClosed();
       if (window.location.hash.includes('admin=' + ADMIN_KEY)) {
-        $id('admin-panel').style.display = 'block';
+        document.getElementById('admin-panel').style.display = 'block';
       }
       updateSubmitLock();
     }
 
     function showClosed() {
-      const o = $id('wl-open');  if (o) o.style.display = 'none';
-      const c = $id('wl-closed'); if (c) c.style.display = 'block';
+      document.getElementById('wl-open')?.style && (document.getElementById('wl-open').style.display = 'none');
+      document.getElementById('wl-closed')?.style && (document.getElementById('wl-closed').style.display = 'block');
     }
 
     function closeWhitelist() {
@@ -465,12 +438,12 @@
 
     function openWhitelist() {
       localStorage.setItem('axomex_open', 'true');
-      $id('wl-open').style.display  = 'block';
-      $id('wl-closed').style.display = 'none';
+      document.getElementById('wl-open').style.display = 'block';
+      document.getElementById('wl-closed').style.display = 'none';
       alert('Whitelist is now OPEN.');
     }
 
-    initAdmin();
+    init();
     checkXStatus();
   </script>
 
