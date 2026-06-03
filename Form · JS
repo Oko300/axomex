@@ -1,0 +1,46 @@
+// Protected form redirect - Google Form URL never exposed in HTML
+function parseCookies(req) {
+  const list = {};
+  const cookieHeader = req.headers.cookie;
+  if (!cookieHeader) return list;
+  cookieHeader.split(';').forEach(cookie => {
+    let [name, ...rest] = cookie.split('=');
+    name = name?.trim();
+    if (!name) return;
+    try { list[name] = decodeURIComponent(rest.join('=').trim()); }
+    catch(e) { list[name] = rest.join('=').trim(); }
+  });
+  return list;
+}
+
+const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLScm87RSpOKJyZxc48S5asIUW1PN9uO5eK2q3CgiwYNSbx4vgw/viewform';
+
+module.exports = (req, res) => {
+  const referer = req.headers.referer || '';
+  const isFromSite = referer.includes('axomex.xyz');
+
+  if (!isFromSite) {
+    return res.redirect('/#whitelist');
+  }
+
+  const cookies = parseCookies(req);
+  let verified = false;
+
+  if (cookies.x_user) {
+    try {
+      const user = JSON.parse(cookies.x_user);
+      verified = user.isFollowing === true;
+    } catch(e) {}
+  }
+
+  // Also accept token from query param (passed from localStorage)
+  const token = req.query.token;
+  if (token === process.env.FORM_TOKEN) verified = true;
+
+  if (verified) {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+    return res.redirect(FORM_URL);
+  }
+
+  return res.redirect('/#whitelist?error=not_verified');
+};

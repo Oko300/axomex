@@ -43,7 +43,7 @@
         <span>Evolve</span>
       </div>
       <a href="#whitelist" class="hero-btn">
-        Join GTD — Free Mint
+        Join GTD Free Mint
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622z"/></svg>
       </a>
     </div>
@@ -127,8 +127,7 @@
 
       <!-- OPEN STATE -->
       <div id="wl-open">
-        <div class="section-label">✦ GTD — Guaranteed Token Distribution ✦</div>
-        <h2>Secure Your GTD Spot</h2>
+                <h2>Secure Your GTD Spot</h2>
         <p class="wl-sub">Complete all steps below. Your X account will be verified before submission is allowed.</p>
         <p class="wl-gtd">🟢 GTD Live</p>
 
@@ -163,7 +162,7 @@
                 Follow on X
               </a>
               <button onclick="confirmFollow()" class="step-btn" style="background:rgba(62,207,178,0.15);border:1px solid rgba(62,207,178,0.4);color:var(--teal);margin-top:0.5rem;cursor:pointer;">
-                ✅ I have followed — Verify
+                ✅ I have followed Verify
               </button>
             </div>
             <div class="step-check" id="check-follow">✓</div>
@@ -198,7 +197,7 @@
           <div class="wl-step tweet-step" id="step-tweet">
             <div class="step-num">5</div>
             <div class="step-body">
-              <h3>Post This Tweet — Required!</h3>
+              <h3>Post This Tweet Required!</h3>
               <p>You MUST post this tweet before submitting. Copy the link to your tweet afterward.</p>
               <div class="tweet-preview">
                 <p>"I just applied for @AxomexNFT whitelist! 1,111 unique axolotls are coming. Free Mint! Join now: axomex.xyz"</p>
@@ -211,7 +210,7 @@
               </a>
               <label class="manual-confirm" style="margin-top:0.5rem;">
                 <input type="checkbox" onchange="manualMark(this, 'tweet')" />
-                <span>I have posted the tweet ✓</span>
+                <span>I have posted the tweet and copied the link ✓</span>
               </label>
               <span style="display:none">
               </a>
@@ -226,7 +225,7 @@
           <h3 class="form-title">Submit Your Entry</h3>
           <p class="form-instructions">Your X account must be connected and all tasks verified before you can submit. You will need your <strong>tweet link</strong>, <strong>comment link</strong> and <strong>EVM wallet address</strong> ready.</p>
           <p id="lock-notice" class="lock-notice">🔒 Connect your X account and follow @AxomexNFT to unlock submission</p>
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLScm87RSpOKJyZxc48S5asIUW1PN9uO5eK2q3CgiwYNSbx4vgw/viewform" target="_blank" class="submit-btn btn-locked" id="submit-btn" onclick="incrementSpots()">
+          <a href="/api/form" target="_blank" class="submit-btn btn-locked" id="submit-btn" onclick="incrementSpots()">
             Fill Submission Form
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
@@ -263,8 +262,9 @@
     const ADMIN_KEY = 'axomex2026';
     let userConnected = false;
     let userFollowing = false;
+    let tweetPosted = false;
 
-    // Read from URL hash after OAuth redirect
+    // ---- Read from URL hash after OAuth ----
     function readFromHash() {
       const hash = window.location.hash;
       if (hash.includes('connected=')) {
@@ -278,135 +278,42 @@
       }
     }
 
-    function disconnectX() {
-      localStorage.removeItem('x_user');
-      localStorage.removeItem('x_followed');
-      userConnected = false;
-      userFollowing = false;
-      // Reset step 1
-      const stepConnect = document.getElementById('step-connect');
-      const checkConnect = document.getElementById('check-connect');
-      if (stepConnect) stepConnect.classList.remove('done');
-      if (checkConnect) checkConnect.classList.remove('visible');
-      const statusEl = document.getElementById('connect-status');
-      const btnWrap = document.getElementById('connect-btn-wrap');
-      if (statusEl) statusEl.textContent = 'Connect your X account to verify your identity';
-      if (btnWrap) btnWrap.innerHTML = `
-        <a href="/auth/x" class="step-btn tweet-btn">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622z"/></svg>
-          Connect X Account
-        </a>`;
-      // Reset follow step
-      const stepFollow = document.getElementById('step-follow');
-      const checkFollow = document.getElementById('check-follow');
-      if (stepFollow) stepFollow.classList.remove('done');
-      if (checkFollow) checkFollow.classList.remove('visible');
-      updateSubmitLock();
-    }
-
-    async function confirmFollow() {
-      if (!userConnected) {
-        alert('Please connect your X account first!');
-        return;
-      }
-      // Re-check follow status from API
-      try {
-        const res = await fetch('/api/status');
-        const data = await res.json();
-        if (data.connected) {
-          if (data.isFollowing) {
-            userFollowing = true;
-            localStorage.setItem('x_user', JSON.stringify({
-              username: data.username,
-              isFollowing: true
-            }));
-            const stepFollow = document.getElementById('step-follow');
-            const checkFollow = document.getElementById('check-follow');
-            if (stepFollow) stepFollow.classList.add('done');
-            if (checkFollow) checkFollow.classList.add('visible');
-            const warn = document.querySelector('.follow-warning');
-            if (warn) warn.remove();
-            updateSubmitLock();
-            alert('Follow verified! ✅');
-          } else {
-            // Update localStorage isFollowing to true since they say they followed
-            // Give benefit of doubt but mark as pending verification
-            const stored = localStorage.getItem('x_user');
-            if (stored) {
-              const u = JSON.parse(stored);
-              u.isFollowing = true;
-              localStorage.setItem('x_user', JSON.stringify(u));
-            }
-            userFollowing = true;
-            const stepFollow = document.getElementById('step-follow');
-            const checkFollow = document.getElementById('check-follow');
-            if (stepFollow) stepFollow.classList.add('done');
-            if (checkFollow) checkFollow.classList.add('visible');
-            const warn = document.querySelector('.follow-warning');
-            if (warn) warn.remove();
-            updateSubmitLock();
-          }
-        }
-      } catch(e) {
-        // Offline fallback - trust the user
-        userFollowing = true;
-        const stored = localStorage.getItem('x_user');
-        if (stored) {
-          const u = JSON.parse(stored);
-          u.isFollowing = true;
-          localStorage.setItem('x_user', JSON.stringify(u));
-        }
-        const stepFollow = document.getElementById('step-follow');
-        const checkFollow = document.getElementById('check-follow');
-        if (stepFollow) stepFollow.classList.add('done');
-        if (checkFollow) checkFollow.classList.add('visible');
-        updateSubmitLock();
-      }
-    }
-
+    // ---- Apply user data to UI ----
     function applyUserData(data) {
       userConnected = true;
       userFollowing = data.isFollowing || false;
 
-      // Mark Step 1 done
-      const stepConnect = document.getElementById('step-connect');
-      const checkConnect = document.getElementById('check-connect');
-      if (stepConnect) stepConnect.classList.add('done');
-      if (checkConnect) checkConnect.classList.add('visible');
+      document.getElementById('step-connect')?.classList.add('done');
+      document.getElementById('check-connect')?.classList.add('visible');
 
-      // Show username badge
       const statusEl = document.getElementById('connect-status');
       const btnWrap = document.getElementById('connect-btn-wrap');
-      if (statusEl) statusEl.textContent = '✅ Connected as @' + data.username;
+      if (statusEl) statusEl.textContent = 'Connected as @' + data.username;
       if (btnWrap) {
         btnWrap.innerHTML = `
           <div class="connected-badge">
             <div class="connected-avatar">@</div>
             <div class="connected-info">
               <span class="connected-name">@${data.username}</span>
-              <span class="connected-tag">X Account Connected ✅</span>
+              <span class="connected-tag">X Account Connected</span>
             </div>
           </div>
-          <button onclick="disconnectX()" class="step-btn x-btn" style="margin-top:0.5rem;font-size:0.75rem;cursor:pointer;border:none;">Switch Account</button>
+          <button onclick="disconnectX()" class="step-btn x-btn" style="margin-top:0.5rem;cursor:pointer;border:none;font-size:0.75rem;">Switch Account</button>
         `;
       }
 
-      // Check follow status
-      if (data.isFollowing) {
-        const stepFollow = document.getElementById('step-follow');
-        const checkFollow = document.getElementById('check-follow');
-        if (stepFollow) stepFollow.classList.add('done');
-        if (checkFollow) checkFollow.classList.add('visible');
-        // Remove warning if exists
-        const warn = document.querySelector('.follow-warning');
-        if (warn) warn.remove();
+      if (userFollowing) {
+        document.getElementById('step-follow')?.classList.add('done');
+        document.getElementById('check-follow')?.classList.add('visible');
+        document.querySelector('.follow-warning')?.remove();
+        document.getElementById('follow-countdown')?.remove();
       } else {
         const followStep = document.getElementById('step-follow');
         if (followStep && !followStep.querySelector('.follow-warning')) {
           const warn = document.createElement('p');
           warn.className = 'follow-warning';
           warn.style.cssText = 'color:#e74c3c;font-size:0.8rem;margin-top:0.5rem;font-weight:700;';
-          warn.textContent = '⚠️ You must follow @AxomexNFT to proceed!';
+          warn.textContent = 'Follow @AxomexNFT then wait for auto-verification';
           followStep.querySelector('.step-body').appendChild(warn);
         }
       }
@@ -414,135 +321,103 @@
       updateSubmitLock();
     }
 
+    // ---- Auto verify follow after clicking Follow button ----
+    function startFollowVerify() {
+      const countdown = document.getElementById('follow-countdown');
+      if (!countdown) return;
+      countdown.style.display = 'block';
+      let secs = 5;
+      countdown.textContent = 'Verifying follow in ' + secs + 's...';
+      const interval = setInterval(() => {
+        secs--;
+        if (secs > 0) {
+          countdown.textContent = 'Verifying follow in ' + secs + 's...';
+        } else {
+          clearInterval(interval);
+          countdown.textContent = 'Checking your follow status...';
+          // Re-run OAuth silently to verify
+          window.location.href = '/auth/x';
+        }
+      }, 1000);
+    }
+
+    // ---- Tweet posted tracking ----
+    function manualMark(checkbox, stepId) {
+      if (checkbox.checked) {
+        if (stepId === 'tweet') tweetPosted = true;
+        markDone(stepId);
+      } else {
+        if (stepId === 'tweet') tweetPosted = false;
+        document.getElementById('step-' + stepId)?.classList.remove('done');
+        document.getElementById('check-' + stepId)?.classList.remove('visible');
+      }
+      updateSubmitLock();
+    }
+
+    function markDone(stepId) {
+      setTimeout(() => {
+        document.getElementById('step-' + stepId)?.classList.add('done');
+        document.getElementById('check-' + stepId)?.classList.add('visible');
+      }, 800);
+    }
+
+    // ---- Lock/unlock submit ----
     function updateSubmitLock() {
       const submitBtn = document.getElementById('submit-btn');
       const lockNotice = document.getElementById('lock-notice');
       if (!submitBtn) return;
-      if (userConnected && userFollowing) {
+
+      const allDone = userConnected && userFollowing && tweetPosted;
+
+      if (allDone) {
         submitBtn.classList.remove('btn-locked');
         submitBtn.style.pointerEvents = 'auto';
         submitBtn.style.opacity = '1';
-        submitBtn.style.cursor = 'pointer';
         if (lockNotice) lockNotice.style.display = 'none';
       } else {
         submitBtn.classList.add('btn-locked');
         submitBtn.style.pointerEvents = 'none';
-        submitBtn.style.opacity = '0.4';
-        submitBtn.style.cursor = 'not-allowed';
+        submitBtn.style.opacity = '0.5';
         if (lockNotice) {
           lockNotice.style.display = 'block';
-          lockNotice.textContent = !userConnected
-            ? '🔒 Connect your X account to unlock submission'
-            : '🔒 Click "I have followed — Verify" to unlock submission';
+          if (!userConnected) lockNotice.textContent = 'Connect your X account to unlock submission';
+          else if (!userFollowing) lockNotice.textContent = 'Follow @AxomexNFT to unlock submission';
+          else if (!tweetPosted) lockNotice.textContent = 'Post the required tweet to unlock submission';
         }
       }
     }
 
+    // ---- Disconnect X ----
+    function disconnectX() {
+      localStorage.removeItem('x_user');
+      location.reload();
+    }
+
+    // ---- Check status on load ----
     async function checkXStatus() {
       readFromHash();
-
-      // Try localStorage first
       const stored = localStorage.getItem('x_user');
       if (stored) {
         try {
-          const data = JSON.parse(stored);
-          applyUserData(data);
+          applyUserData(JSON.parse(stored));
           return;
         } catch(e) { localStorage.removeItem('x_user'); }
       }
-
-      // Try API
       try {
         const res = await fetch('/api/status');
         const data = await res.json();
         if (data.connected) {
           localStorage.setItem('x_user', JSON.stringify(data));
           applyUserData(data);
-        } else {
-          updateSubmitLock();
-        }
-      } catch(e) {
-        updateSubmitLock();
-      }
+        } else { updateSubmitLock(); }
+      } catch(e) { updateSubmitLock(); }
     }
 
-    async function reverifyFollow() {
-      const stored = localStorage.getItem('x_user');
-      if (!stored) { alert('Connect your X account first!'); return; }
+    function incrementSpots() {}
 
-      const btn = event.target;
-      btn.textContent = 'Checking...';
-      btn.disabled = true;
-
-      // Re-run OAuth to get fresh follow status
-      // For now update localStorage to mark following=true after user confirms
-      try {
-        const res = await fetch('/api/status');
-        const data = await res.json();
-        if (data.connected) {
-          const userData = JSON.parse(stored);
-          // Re-auth to get fresh data
-          window.location.href = '/auth/x';
-        }
-      } catch(e) {
-        // Fallback: redirect to re-auth
-        window.location.href = '/auth/x';
-      }
-    }
-
-    function manualMark(checkbox, stepId) {
-      if (checkbox.checked) {
-        markDone(stepId);
-      } else {
-        const step = document.getElementById('step-' + stepId);
-        const check = document.getElementById('check-' + stepId);
-        if (step) step.classList.remove('done');
-        if (check) check.classList.remove('visible');
-      }
-    }
-
-    function markDone(stepId) {
-      if (!userConnected) {
-        alert('Please connect your X account first before completing tasks!');
-        return;
-      }
-      setTimeout(() => {
-        const step = document.getElementById('step-' + stepId);
-        const check = document.getElementById('check-' + stepId);
-        if (step) step.classList.add('done');
-        if (check) check.classList.add('visible');
-        // After marking like, comment, tweet done — check if submit should unlock
-        checkAllTasksDone();
-      }, 1200);
-    }
-
-    function checkAllTasksDone() {
-      const likeDone = document.getElementById('step-like')?.classList.contains('done');
-      const commentDone = document.getElementById('step-comment')?.classList.contains('done');
-      const tweetDone = document.getElementById('step-tweet')?.classList.contains('done');
-      if (userConnected && userFollowing && likeDone && commentDone && tweetDone) {
-        const submitBtn = document.getElementById('submit-btn');
-        const lockNotice = document.getElementById('lock-notice');
-        if (submitBtn) {
-          submitBtn.classList.remove('btn-locked');
-          submitBtn.style.pointerEvents = 'auto';
-        }
-        if (lockNotice) lockNotice.style.display = 'none';
-      }
-    }
-
-    function incrementSpots() {
-      let spots = parseInt(localStorage.getItem('axomex_spots') || '50');
-      if (spots > 0) {
-        spots--;
-        localStorage.setItem('axomex_spots', spots);
-      }
-    }
-
-    const TOTAL_SPOTS = 50;
-    let isOpen = localStorage.getItem('axomex_open') !== 'false';
-
+    // ---- Admin controls ----
     function init() {
+      const isOpen = localStorage.getItem('axomex_open') !== 'false';
       if (!isOpen) showClosed();
       if (window.location.hash.includes('admin=' + ADMIN_KEY)) {
         document.getElementById('admin-panel').style.display = 'block';
@@ -551,10 +426,8 @@
     }
 
     function showClosed() {
-      const open = document.getElementById('wl-open');
-      const closed = document.getElementById('wl-closed');
-      if (open) open.style.display = 'none';
-      if (closed) closed.style.display = 'block';
+      document.getElementById('wl-open')?.style && (document.getElementById('wl-open').style.display = 'none');
+      document.getElementById('wl-closed')?.style && (document.getElementById('wl-closed').style.display = 'block');
     }
 
     function closeWhitelist() {
@@ -565,10 +438,8 @@
 
     function openWhitelist() {
       localStorage.setItem('axomex_open', 'true');
-      const open = document.getElementById('wl-open');
-      const closed = document.getElementById('wl-closed');
-      if (open) open.style.display = 'block';
-      if (closed) closed.style.display = 'none';
+      document.getElementById('wl-open').style.display = 'block';
+      document.getElementById('wl-closed').style.display = 'none';
       alert('Whitelist is now OPEN.');
     }
 
