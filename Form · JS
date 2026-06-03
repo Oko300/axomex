@@ -1,54 +1,6 @@
-// /api/form.js
-// Protected redirect to Google Form.
-// Only allows access if:
-//   1. Request comes from axomex.xyz (referer check)
-//   2. User has tweetVerified === true in their x_user cookie
-//      (set by /api/verify-tweet.js after tweet is confirmed)
-
-function parseCookies(req) {
-  const list = {};
-  const cookieHeader = req.headers.cookie;
-  if (!cookieHeader) return list;
-  cookieHeader.split(';').forEach(cookie => {
-    let [name, ...rest] = cookie.split('=');
-    name = name?.trim();
-    if (!name) return;
-    try { list[name] = decodeURIComponent(rest.join('=').trim()); }
-    catch (e) { list[name] = rest.join('=').trim(); }
-  });
-  return list;
-}
-
-const FORM_URL =
-  'https://docs.google.com/forms/d/e/1FAIpQLScm87RSpOKJyZxc48S5asIUW1PN9uO5eK2q3CgiwYNSbx4vgw/viewform';
+const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLScm87RSpOKJyZxc48S5asIUW1PN9uO5eK2q3CgiwYNSbx4vgw/viewform';
 
 module.exports = (req, res) => {
-  // Block direct access (not from the site)
-  const referer = req.headers.referer || '';
-  const isFromSite = referer.includes('axomex.xyz');
-  if (!isFromSite) {
-    return res.redirect('/#whitelist');
-  }
-
-  const cookies = parseCookies(req);
-  let verified = false;
-
-  if (cookies.x_user) {
-    try {
-      const user = JSON.parse(cookies.x_user);
-      // Must have BOTH: followed AND posted the tweet
-      verified = user.isFollowing === true && user.tweetVerified === true;
-    } catch (e) {}
-  }
-
-  // Fallback: signed token in query (for edge cases)
-  const token = req.query.token;
-  if (token === process.env.FORM_TOKEN) verified = true;
-
-  if (verified) {
-    res.setHeader('X-Robots-Tag', 'noindex, nofollow');
-    return res.redirect(FORM_URL);
-  }
-
-  return res.redirect('/#whitelist?error=not_verified');
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  return res.redirect(FORM_URL);
 };
