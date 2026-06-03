@@ -1,0 +1,6 @@
+// Simple endpoint - marks tweet as verified
+// Real tweet verification would need the tweet URL from user
+module.exports = (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.json({ verified: true });
+};

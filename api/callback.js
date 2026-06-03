@@ -2,29 +2,33 @@ const axios = require('axios');
 
 function parseCookies(req) {
   const list = {};
-  const cookieHeader = req.headers.cookie;
-  if (!cookieHeader) return list;
-  cookieHeader.split(';').forEach(cookie => {
-    let [name, ...rest] = cookie.split('=');
-    name = name?.trim();
-    if (!name) return;
-    try { list[name] = decodeURIComponent(rest.join('=').trim()); }
-    catch(e) { list[name] = rest.join('=').trim(); }
+  const h = req.headers.cookie;
+  if (!h) return list;
+  h.split(';').forEach(c => {
+    let [n, ...v] = c.split('=');
+    n = n?.trim();
+    if (n) try { list[n] = decodeURIComponent(v.join('=').trim()); } catch(e) { list[n] = v.join('=').trim(); }
   });
   return list;
 }
 
 module.exports = async (req, res) => {
-  const { code, state } = req.query;
-  const cookies = parseCookies(req);
+  const { code, state: returnedState } = req.query;
+  if (!code || !returnedState) return res.redirect('/?error=missing_params');
 
-  if (!code) return res.redirect('/?error=no_code');
-  if (!state || state !== cookies.oauth_state) return res.redirect('/?error=state_mismatch');
+  // Decode the combined state|verifier we encoded in auth.js
+  let stateObj;
+  try {
+    stateObj = JSON.parse(Buffer.from(returnedState, 'base64url').toString());
+  } catch(e) {
+    return res.redirect('/?error=bad_state');
+  }
 
-  const codeVerifier = cookies.code_verifier;
+  const { codeVerifier } = stateObj;
   if (!codeVerifier) return res.redirect('/?error=no_verifier');
 
   try {
+    // Exchange code for token using Basic Auth (confidential client)
     const tokenRes = await axios.post(
       'https://api.twitter.com/2/oauth2/token',
       new URLSearchParams({
@@ -45,12 +49,13 @@ module.exports = async (req, res) => {
 
     const accessToken = tokenRes.data.access_token;
 
+    // Get user profile
     const userRes = await axios.get('https://api.twitter.com/2/users/me', {
       headers: { Authorization: `Bearer ${accessToken}` }
     });
     const user = userRes.data.data;
 
-    // Check if following
+    // Check if following @AxomexNFT
     let isFollowing = false;
     try {
       const targetRes = await axios.get(
@@ -64,26 +69,21 @@ module.exports = async (req, res) => {
       );
       isFollowing = followRes.data.data?.some(u => u.id === targetId) || false;
     } catch(e) {
-      console.error('Follow check:', e.response?.data || e.message);
+      console.error('Follow check error:', e.response?.data || e.message);
     }
 
-    // Store in cookie with all possible flags for Vercel
-    const userData = encodeURIComponent(JSON.stringify({
-      username: user.username,
-      isFollowing
-    }));
-
+    // Set user data cookie
+    const userData = encodeURIComponent(JSON.stringify({ username: user.username, isFollowing }));
     res.setHeader('Set-Cookie', [
-      `x_user=${userData}; Path=/; Max-Age=7200; SameSite=Lax`,
-      `oauth_state=; Path=/; Max-Age=0`,
-      `code_verifier=; Path=/; Max-Age=0`
+      `x_user=${userData}; Path=/; SameSite=Lax; Max-Age=7200; Secure`,
+      `cv=; Path=/; Max-Age=0`
     ]);
 
-    // Pass data in URL hash so JS can also store in localStorage as backup
+    // Also pass in URL hash as primary method (localStorage backup)
     res.redirect(`/#connected=${encodeURIComponent(user.username)}&following=${isFollowing}`);
 
   } catch(err) {
-    console.error('Callback error:', err.response?.data || err.message);
-    res.redirect('/?error=auth_failed');
+    console.error('Callback error:', JSON.stringify(err.response?.data || err.message));
+    res.redirect('/?error=token_exchange_failed');
   }
 };

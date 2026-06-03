@@ -1,15 +1,16 @@
 {
   "version": 2,
+  "regions": ["all"],
   "builds": [
     { "src": "api/*.js", "use": "@vercel/node" },
     { "src": "public/**", "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "/auth/x",          "dest": "/api/auth.js" },
-    { "src": "/callback",        "dest": "/api/callback.js" },
-    { "src": "/api/status",      "dest": "/api/status.js" },
-    { "src": "/api/verify-tweet","dest": "/api/verify-tweet.js" },
-    { "src": "/api/form",        "dest": "/api/form.js" },
-    { "src": "/(.*)",            "dest": "/public/$1" }
+    { "src": "/auth/x", "dest": "/api/auth.js" },
+    { "src": "/callback", "dest": "/api/callback.js" },
+    { "src": "/api/status", "dest": "/api/status.js" },
+    { "src": "/api/form", "dest": "/api/form.js" },
+    { "src": "/api/verify-tweet", "dest": "/api/verify-tweet.js" },
+    { "src": "/(.*)", "dest": "/public/$1" }
   ]
 }
