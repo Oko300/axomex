@@ -1,0 +1,176 @@
+<!-- =============================================
+     WHITELIST SECTION — drop this into index.html
+     IDs are wired to /public/whitelist.js
+     ============================================= -->
+
+<section class="whitelist" id="whitelist">
+  <div class="wl-inner">
+
+    <!-- Header -->
+    <p class="section-label">Secure Your Spot</p>
+    <h2 style="font-family:var(--font-head);font-size:clamp(2rem,5vw,3.2rem);color:var(--white);margin-bottom:1rem;">
+      Secure Your <span style="color:var(--teal)">GTD Spot</span>
+    </h2>
+
+    <!-- Spots progress bar -->
+    <div class="spots-bar"><div class="spots-bar-fill" id="spots-bar-fill"></div></div>
+    <p class="spots-label" id="spots-label">Loading available spots…</p>
+
+    <p class="wl-sub">
+      Complete all steps below. Your X account will be verified before submission is allowed.
+    </p>
+
+    <!-- GTD badge -->
+    <div style="margin-bottom:2rem;">
+      <span class="wl-gtd">● GTD Live</span>
+    </div>
+
+    <!-- ── STEPS ── -->
+    <div class="wl-steps">
+
+      <!-- STEP 1: Connect X -->
+      <div class="wl-step" id="step-1">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Connect Your X Account</h3>
+          <p>Sign in with X (Twitter) to begin.</p>
+
+          <!-- Connected badge (hidden until connected) -->
+          <div class="connected-badge" id="connected-badge" style="display:none;">
+            <div class="connected-avatar">@</div>
+            <div class="connected-info">
+              <span class="connected-name">@username</span>
+              <span class="connected-tag">X Account Connected</span>
+            </div>
+          </div>
+
+          <!-- Show connect button only when not yet connected -->
+          <a href="/auth/x" class="step-btn x-btn" id="connect-btn"
+             style="margin-top:0.6rem;display:inline-flex;">
+            𝕏 &nbsp;Connect X Account
+          </a>
+
+          <!-- Switch account link (shown after connected) -->
+          <a href="/auth/x" class="step-btn x-btn" id="switch-btn"
+             style="margin-top:0.6rem;display:none;font-size:0.78rem;opacity:0.7;">
+            Switch Account
+          </a>
+        </div>
+        <div class="step-check" id="check-1">✓</div>
+      </div>
+
+      <!-- STEP 2: Follow -->
+      <div class="wl-step tweet-step" id="step-2">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Follow @AxomexNFT on X</h3>
+          <p>Click to go to our profile and follow us</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+            <button class="step-btn x-btn" id="follow-btn" type="button">𝕏 Follow on X</button>
+          </div>
+          <!-- Auto-verify status message -->
+          <p id="follow-status" style="display:none;margin-top:0.5rem;font-size:0.82rem;font-weight:700;"></p>
+          <!-- Manual fallback (hidden until polling times out) -->
+          <label class="manual-confirm" id="manual-follow-wrap" style="display:none;margin-top:0.5rem;">
+            <input type="checkbox" id="manual-follow-check">
+            <span>I have followed @AxomexNFT — verify now</span>
+          </label>
+        </div>
+        <div class="step-check" id="check-2">✓</div>
+      </div>
+
+      <!-- STEP 3: Like & Repost -->
+      <div class="wl-step" id="step-3">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Like and Repost our Pinned Post</h3>
+          <p>Go to our profile and like + repost the pinned tweet</p>
+          <a href="https://x.com/AxomexNFT" target="_blank" class="step-btn x-btn">𝕏 Like and Repost</a>
+        </div>
+        <div class="step-check" id="check-3">✓</div>
+      </div>
+
+      <!-- STEP 4: Comment -->
+      <div class="wl-step" id="step-4">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h3>Comment Your Wallet and Tag 2 Friends</h3>
+          <p>On our pinned post, drop your wallet address and tag 2 friends</p>
+          <a href="https://x.com/AxomexNFT" target="_blank" class="step-btn x-btn">𝕏 Go Comment</a>
+        </div>
+        <div class="step-check" id="check-4">✓</div>
+      </div>
+
+      <!-- STEP 5: Post Required Tweet -->
+      <div class="wl-step tweet-step" id="step-5">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h3>Post This Tweet — Required!</h3>
+          <p>You MUST post this tweet before submitting. It will be auto-verified.</p>
+          <div class="tweet-preview">
+            "I just applied for @AxomexNFT whitelist! 1,111 unique axolotls are coming. Free Mint! Join now: axomex.xyz"
+          </div>
+          <button class="step-btn tweet-btn" id="tweet-btn" type="button">𝕏 Post Tweet Now</button>
+          <!-- Auto-verify status -->
+          <p id="tweet-status" style="display:none;margin-top:0.5rem;font-size:0.82rem;font-weight:700;"></p>
+          <!-- Manual fallback (hidden until polling times out) -->
+          <label class="manual-confirm" id="tweet-manual-wrap" style="display:none;margin-top:0.6rem;">
+            <input type="checkbox" id="tweet-manual-check">
+            <span>I have posted the tweet and copied the link ✓</span>
+          </label>
+        </div>
+        <div class="step-check" id="check-5">✓</div>
+      </div>
+
+    </div>
+    <!-- /wl-steps -->
+
+    <!-- ── SUBMIT SECTION ── -->
+    <div class="wl-form-wrap">
+      <h3 class="form-title">Submit Your Entry</h3>
+      <p class="form-instructions">
+        Your X account must be connected and all tasks verified before you can submit.
+        You will need your <strong>tweet link</strong>, <strong>comment link</strong>
+        and <strong>EVM wallet address</strong> ready.
+      </p>
+
+      <!-- Lock notice (shown while not all steps done) -->
+      <div class="lock-notice" id="lock-notice">
+        ⚠ Connect your X account first
+      </div>
+
+      <!-- The submit button — href set by JS when unlocked -->
+      <a class="submit-btn btn-locked" id="submit-btn" href="#whitelist">
+        Fill Submission Form →
+      </a>
+
+      <p class="form-note">The team will review all entries.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- Auto-verification script -->
+<script src="/whitelist.js"></script>
+
+<!-- Extra JS: show/hide connect vs switch buttons based on connection state -->
+<script>
+(function() {
+  // Once whitelist.js runs and state.connected becomes true,
+  // hide the "Connect" button and show "Switch Account".
+  // We hook into the MutationObserver on the connected-badge visibility.
+  const badge = document.getElementById('connected-badge');
+  const connectBtn = document.getElementById('connect-btn');
+  const switchBtn  = document.getElementById('switch-btn');
+
+  if (!badge || !connectBtn || !switchBtn) return;
+
+  const observer = new MutationObserver(() => {
+    const isVisible = badge.style.display !== 'none';
+    connectBtn.style.display = isVisible ? 'none' : 'inline-flex';
+    switchBtn.style.display  = isVisible ? 'inline-flex' : 'none';
+  });
+
+  observer.observe(badge, { attributes: true, attributeFilter: ['style'] });
+})();
+</script>

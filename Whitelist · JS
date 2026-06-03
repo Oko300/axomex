@@ -1,0 +1,328 @@
+/* =============================================================
+   whitelist.js  —  AXOMEX auto-verification logic
+   Drop this as <script src="/whitelist.js"></script> before </body>
+   ============================================================= */
+
+(function () {
+  'use strict';
+
+  // ── CONFIG ──────────────────────────────────────────────────
+  const POLL_INTERVAL_MS   = 5000;   // how often to poll (ms)
+  const POLL_MAX_ATTEMPTS  = 36;     // max polls = 36 × 5s = 3 minutes
+  const TWEET_TEXT =
+    'I just applied for @AxomexNFT whitelist! 1,111 unique axolotls are coming. Free Mint! Join now: axomex.xyz';
+
+  // ── STATE ───────────────────────────────────────────────────
+  let state = {
+    connected:    false,
+    username:     null,
+    isFollowing:  false,
+    tweetVerified: false,
+  };
+
+  let followPollTimer   = null;
+  let tweetPollTimer    = null;
+  let followAttempts    = 0;
+  let tweetAttempts     = 0;
+
+  // ── DOM REFS ────────────────────────────────────────────────
+  // Steps
+  const step1El    = () => document.getElementById('step-1');
+  const step2El    = () => document.getElementById('step-2');
+  const step3El    = () => document.getElementById('step-3');
+  const step4El    = () => document.getElementById('step-4');
+  const step5El    = () => document.getElementById('step-5');
+
+  // Step checks (green tick circles)
+  const check      = (id) => document.getElementById('check-' + id);
+
+  // Buttons / notices
+  const followBtn       = () => document.getElementById('follow-btn');
+  const followStatus    = () => document.getElementById('follow-status');
+  const tweetBtn        = () => document.getElementById('tweet-btn');
+  const tweetCheck      = () => document.getElementById('tweet-manual-check');
+  const tweetStatus     = () => document.getElementById('tweet-status');
+  const submitBtn       = () => document.getElementById('submit-btn');
+  const lockNotice      = () => document.getElementById('lock-notice');
+  const connectedBadge  = () => document.getElementById('connected-badge');
+  const spotsBar        = () => document.getElementById('spots-bar-fill');
+
+  // ── UTILITIES ───────────────────────────────────────────────
+  function markDone(stepEl, checkEl) {
+    if (stepEl) stepEl.classList.add('done');
+    if (checkEl) checkEl.classList.add('visible');
+  }
+
+  function setFollowPolling(msg, color = 'var(--teal)') {
+    const el = followStatus();
+    if (!el) return;
+    el.textContent = msg;
+    el.style.color = color;
+    el.style.display = msg ? 'block' : 'none';
+  }
+
+  function setTweetStatus(msg, color = 'var(--teal)') {
+    const el = tweetStatus();
+    if (!el) return;
+    el.textContent = msg;
+    el.style.color = color;
+    el.style.display = msg ? 'block' : 'none';
+  }
+
+  function updateSubmitButton() {
+    const btn = submitBtn();
+    if (!btn) return;
+
+    const lock    = lockNotice();
+    const allDone = state.connected && state.isFollowing && state.tweetVerified;
+
+    if (allDone) {
+      btn.classList.remove('btn-locked');
+      btn.disabled = false;
+      btn.href = '/api/form';           // redirect through protected gate
+      if (lock) lock.style.display = 'none';
+    } else {
+      btn.classList.add('btn-locked');
+      btn.disabled = true;
+
+      if (lock) {
+        lock.style.display = 'block';
+        if (!state.connected) {
+          lock.textContent = '⚠ Connect your X account first';
+        } else if (!state.isFollowing) {
+          lock.textContent = '⚠ Follow @AxomexNFT to unlock submission';
+        } else if (!state.tweetVerified) {
+          lock.textContent = '⚠ Post the required tweet to unlock submission';
+        }
+      }
+    }
+  }
+
+  // ── SPOTS BAR (cosmetic) ─────────────────────────────────────
+  function animateSpotsBar(pct) {
+    const el = spotsBar();
+    if (el) el.style.width = pct + '%';
+  }
+
+  // ── STATUS FETCH ─────────────────────────────────────────────
+  async function fetchStatus() {
+    try {
+      const res = await fetch('/api/status', { credentials: 'include' });
+      if (!res.ok) return null;
+      return await res.json();
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // ── TWEET VERIFY FETCH ───────────────────────────────────────
+  async function fetchTweetVerify() {
+    try {
+      const res = await fetch('/api/verify-tweet', { credentials: 'include' });
+      if (!res.ok) return null;
+      return await res.json();
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // ── APPLY STATE TO UI ────────────────────────────────────────
+  function applyState() {
+    // Step 1: connected
+    if (state.connected) {
+      markDone(step1El(), check(1));
+
+      // Show connected badge with username
+      const badge = connectedBadge();
+      if (badge) {
+        const nameEl = badge.querySelector('.connected-name');
+        const tagEl  = badge.querySelector('.connected-tag');
+        if (nameEl) nameEl.textContent = '@' + state.username;
+        if (tagEl)  tagEl.textContent  = 'X Account Connected';
+        badge.style.display = 'flex';
+      }
+    }
+
+    // Step 2: following
+    if (state.isFollowing) {
+      markDone(step2El(), check(2));
+      stopFollowPolling();
+      setFollowPolling('✓ Verified — you are following @AxomexNFT');
+    }
+
+    // Step 5: tweet verified
+    if (state.tweetVerified) {
+      markDone(step5El(), check(5));
+      stopTweetPolling();
+      setTweetStatus('✓ Tweet verified!');
+      const tc = tweetCheck();
+      if (tc) { tc.checked = true; tc.disabled = true; }
+    }
+
+    updateSubmitButton();
+  }
+
+  // ── FOLLOW POLLING ───────────────────────────────────────────
+  function startFollowPolling() {
+    if (followPollTimer) return; // already running
+    followAttempts = 0;
+    setFollowPolling('⏳ Checking follow status…', 'var(--muted)');
+
+    followPollTimer = setInterval(async () => {
+      followAttempts++;
+      const data = await fetchStatus();
+
+      if (data?.isFollowing) {
+        state.isFollowing = true;
+        applyState();
+        return;
+      }
+
+      if (followAttempts >= POLL_MAX_ATTEMPTS) {
+        stopFollowPolling();
+        setFollowPolling(
+          '⚠ Auto-check timed out. Click "I have followed Verify" if you've followed.',
+          '#e74c3c'
+        );
+      }
+    }, POLL_INTERVAL_MS);
+  }
+
+  function stopFollowPolling() {
+    if (followPollTimer) { clearInterval(followPollTimer); followPollTimer = null; }
+  }
+
+  // ── TWEET POLLING ────────────────────────────────────────────
+  function startTweetPolling() {
+    if (tweetPollTimer) return;
+    tweetAttempts = 0;
+    setTweetStatus('⏳ Waiting for your tweet to appear…', 'var(--muted)');
+
+    tweetPollTimer = setInterval(async () => {
+      tweetAttempts++;
+      const data = await fetchTweetVerify();
+
+      if (data?.verified) {
+        state.tweetVerified = true;
+        applyState();
+        return;
+      }
+
+      if (tweetAttempts >= POLL_MAX_ATTEMPTS) {
+        stopTweetPolling();
+        setTweetStatus(
+          '⚠ Could not auto-detect tweet. Check the box below if you\'ve posted it.',
+          '#e74c3c'
+        );
+        // Show manual fallback checkbox
+        const wrap = document.getElementById('tweet-manual-wrap');
+        if (wrap) wrap.style.display = 'flex';
+      }
+    }, POLL_INTERVAL_MS);
+  }
+
+  function stopTweetPolling() {
+    if (tweetPollTimer) { clearInterval(tweetPollTimer); tweetPollTimer = null; }
+  }
+
+  // ── EVENT WIRING ─────────────────────────────────────────────
+  function wireEvents() {
+    // Follow button → open X profile then start polling
+    const fb = followBtn();
+    if (fb) {
+      fb.addEventListener('click', () => {
+        if (!state.connected) return;
+        window.open('https://x.com/AxomexNFT', '_blank');
+        // Small delay then begin polling
+        setTimeout(startFollowPolling, 2000);
+      });
+    }
+
+    // Manual "I have followed" fallback (already in HTML)
+    const manualFollow = document.getElementById('manual-follow-check');
+    if (manualFollow) {
+      manualFollow.addEventListener('change', () => {
+        if (manualFollow.checked && state.connected) {
+          // Trigger one immediate check then fall back to polling
+          fetchStatus().then(data => {
+            if (data?.isFollowing) {
+              state.isFollowing = true;
+              applyState();
+            } else {
+              startFollowPolling();
+            }
+          });
+        }
+      });
+    }
+
+    // Tweet button → open Twitter intent then start tweet polling
+    const tb = tweetBtn();
+    if (tb) {
+      tb.addEventListener('click', () => {
+        const encoded = encodeURIComponent(TWEET_TEXT);
+        window.open(`https://x.com/intent/tweet?text=${encoded}`, '_blank');
+        setTimeout(startTweetPolling, 4000); // give them time to actually post it
+      });
+    }
+
+    // Manual tweet checkbox fallback
+    const mtc = tweetCheck();
+    if (mtc) {
+      mtc.addEventListener('change', () => {
+        if (mtc.checked) {
+          // Do one final real check before accepting manual confirmation
+          fetchTweetVerify().then(data => {
+            if (data?.verified) {
+              state.tweetVerified = true;
+            } else {
+              // Accept manual confirmation as fallback (soft trust)
+              state.tweetVerified = true;
+            }
+            applyState();
+          });
+        }
+      });
+    }
+
+    // Submit button intercept — ensure gate check
+    const sb = submitBtn();
+    if (sb) {
+      sb.addEventListener('click', (e) => {
+        if (!state.connected || !state.isFollowing || !state.tweetVerified) {
+          e.preventDefault();
+          updateSubmitButton(); // refresh lock notice
+        }
+      });
+    }
+  }
+
+  // ── INIT ─────────────────────────────────────────────────────
+  async function init() {
+    // Animate spots bar (cosmetic — e.g. 73% filled)
+    setTimeout(() => animateSpotsBar(73), 600);
+
+    // Initial status fetch (restores state if already authenticated)
+    const data = await fetchStatus();
+
+    if (data && !data.error) {
+      state.connected    = true;
+      state.username     = data.username;
+      state.isFollowing  = data.isFollowing  || false;
+      state.tweetVerified = data.tweetVerified || false;
+    }
+
+    applyState();
+    wireEvents();
+
+    // If already following but not yet tweeted, just show normal state
+    // If everything done, submit button unlocks automatically
+  }
+
+  // Run on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
